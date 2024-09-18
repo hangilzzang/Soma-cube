@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class QuarterView : MonoBehaviour
 {
-    public Transform target;
     float offset = 10;
 
     void LateUpdate()
     {
-        transform.position = new Vector3(target.position.x + offset, target.position.y + offset, target.position.z + offset); // 쿼터뷰 설정
-        transform.LookAt(target); // 타겟을 향하는 카메라
+        // 카메라의 위치를 Vector3.zero에서 offset만큼 떨어진 위치로 설정
+        transform.position = new Vector3(offset, offset, offset);
+        // 카메라가 항상 (0, 0, 0)을 바라보도록 설정
+        transform.LookAt(Vector3.zero);
     }
 
 }
