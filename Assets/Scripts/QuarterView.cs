@@ -13,6 +13,7 @@ public class QuarterView : MonoBehaviour
         transform.position = new Vector3(target.x + offset, target.y + offset, target.z + offset);
         // 카메라가 항상 (0, 0, 0)을 바라보도록 설정
         transform.LookAt(target);
+        // 에효 ㅋㅋㅋㅋㅋㅋ
     }
 
 }
