@@ -16,28 +16,58 @@ public class BlockTouch : MonoBehaviour
     {
         // 스와이프 이벤트 구독
         LeanTouch.OnFingerSwipe += HandleFingerSwipe;
+        LeanTouch.OnFingerOld += HandleFingerHeld;
     }
 
     void OnDisable()
     {
         // 스와이프 이벤트 구독 해제
         LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
+        LeanTouch.OnFingerOld -= HandleFingerHeld;
     }
 
-    void HandleFingerSwipe(LeanFinger finger)
+    
+    List<RaycastResult> GetUIRaycastResults(Vector2 startPos)
     {
-        // Get the screen position where the swipe started
-        Vector2 startPos = finger.StartScreenPosition;
-
-        // Create a PointerEventData for raycasting
+        // PointerEventData 생성
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
         {
             position = startPos
         };
 
-        // Perform the raycast
+        // Raycast 결과를 저장할 리스트
         var results = new List<RaycastResult>();
+
+        // Raycast 수행
         EventSystem.current.RaycastAll(pointerData, results);
+
+        // Raycast 결과 반환
+        return results;
+    }
+
+    void HandleFingerHeld(LeanFinger finger)
+    {
+        Vector2 startPos = finger.StartScreenPosition;
+        List<RaycastResult> results = GetUIRaycastResults(startPos);
+        if (results.Count > 0)
+        {
+            GameObject HeldUI = results[0].gameObject;
+            if (HeldUI == gameObject)
+            {
+                Handheld.Vibrate();
+                Debug.Log("Held UI Object: " + gameObject.name);
+            }
+        }
+    }
+    
+    
+    void HandleFingerSwipe(LeanFinger finger)
+    {
+        // Get the screen position where the swipe started
+        Vector2 startPos = finger.StartScreenPosition;
+
+        // Raycast results
+        List<RaycastResult> results = GetUIRaycastResults(startPos);
 
         if (results.Count > 0)
         {
