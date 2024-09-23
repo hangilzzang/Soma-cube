@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Lean.Touch;
+using DG.Tweening;
 
 public class BlockTouch : MonoBehaviour
 {
     public float leftRightThreshold = 3f;
     public Transform blockTransform;
+    public float rotateDuration = 0.5f; // 회전 애니메이션 지속 시간
 
     void OnEnable()
     {
@@ -40,7 +42,7 @@ public class BlockTouch : MonoBehaviour
         if (results.Count > 0)
         {
             GameObject swipedUI = results[0].gameObject;
-            if (swipedUI == gameObject)
+            if (swipedUI == gameObject && !DOTween.IsTweening(blockTransform))
             {
                 Vector2 swipeDelta = finger.SwipeScreenDelta;
 
@@ -49,11 +51,11 @@ public class BlockTouch : MonoBehaviour
                 {
                     if (swipeDelta.x > 0)
                     {
-                        blockTransform.Rotate(0, -90, 0, Space.World);
+                        blockTransform.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                     }
                     else
                     {
-                        blockTransform.Rotate(0, 90, 0, Space.World);
+                        blockTransform.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                     }
                 }
                 else
@@ -61,19 +63,19 @@ public class BlockTouch : MonoBehaviour
                     // x축, z축
                     if (swipeDelta.x > 0 && swipeDelta.y > 0)
                     {
-                        blockTransform.Rotate(0, 0, 90, Space.World);
+                        blockTransform.DORotate(new Vector3(0, 0, 90), rotateDuration, RotateMode.WorldAxisAdd);
                     }
                     else if (swipeDelta.x < 0 && swipeDelta.y > 0)
                     {
-                        blockTransform.Rotate(-90, 0, 0, Space.World);
+                        blockTransform.DORotate(new Vector3(-90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
                     }
                     else if (swipeDelta.x < 0 && swipeDelta.y < 0)
                     {
-                        blockTransform.Rotate(0, 0, -90, Space.World);
+                        blockTransform.DORotate(new Vector3(0, 0, -90), rotateDuration, RotateMode.WorldAxisAdd);
                     }
                     else if (swipeDelta.x > 0 && swipeDelta.y < 0)
                     {
-                        blockTransform.Rotate(90, 0, 0, Space.World);
+                        blockTransform.DORotate(new Vector3(90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
                     }
                 }
             }

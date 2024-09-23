@@ -794,6 +794,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftRightThreshold: 3
   blockTransform: {fileID: 1557448080}
+  rotateDuration: 0.5
 --- !u!114 &246750537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -895,6 +896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftRightThreshold: 3
   blockTransform: {fileID: 633031157}
+  rotateDuration: 0.5
 --- !u!114 &297235888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -996,6 +998,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftRightThreshold: 3
   blockTransform: {fileID: 145318509}
+  rotateDuration: 0.5
 --- !u!114 &390486019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1410,7 +1413,7 @@ Transform:
   m_GameObject: {fileID: 686939697}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -7.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1732,6 +1735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftRightThreshold: 3
   blockTransform: {fileID: 153401955}
+  rotateDuration: 0.5
 --- !u!114 &834608018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1965,6 +1969,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftRightThreshold: 3
   blockTransform: {fileID: 1797787701}
+  rotateDuration: 0.5
 --- !u!114 &1031170722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2968,6 +2973,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftRightThreshold: 3
   blockTransform: {fileID: 35934900}
+  rotateDuration: 0.5
 --- !u!114 &1643626243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3422,6 +3428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftRightThreshold: 3
   blockTransform: {fileID: 1849935730}
+  rotateDuration: 0.5
 --- !u!114 &1835221137
 MonoBehaviour:
   m_ObjectHideFlags: 0
