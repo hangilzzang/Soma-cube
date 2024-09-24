@@ -11,6 +11,7 @@ public class BlockTouch : MonoBehaviour
     public float leftRightThreshold = 3f;
     public Transform blockTransform;
     public float rotateDuration = 0.5f; // 회전 애니메이션 지속 시간
+    public GameObject blockPrefab;
 
     void OnEnable()
     {
@@ -45,6 +46,24 @@ public class BlockTouch : MonoBehaviour
         return results;
     }
 
+    // 특정좌표(평면)에 블럭을 올리려할때 위치 계산
+        public Vector3 CalculateBlockPlacement(Transform blockTransform, Vector3 planePosition)
+    {
+        // 블럭의 크기와 중심을 계산
+        // Vector3 blockCenter = blockTransform.GetComponent<Renderer>().bounds.center;
+        Vector3 blockExtents = blockTransform.GetComponent<Renderer>().bounds.extents;
+
+        // 블럭의 중심과 최상단 간의 거리 계산
+        float topDistance = blockExtents.y;
+
+        // 평면 위치에 블럭을 배치할 때, 중심이 평면 위로 오도록 위치 조정
+        Vector3 placementPosition = new Vector3(planePosition.x, planePosition.y + topDistance, planePosition.z);
+
+        return placementPosition;
+    }
+
+
+    
     void HandleFingerHeld(LeanFinger finger)
     {
         Vector2 startPos = finger.StartScreenPosition;
@@ -54,8 +73,11 @@ public class BlockTouch : MonoBehaviour
             GameObject HeldUI = results[0].gameObject;
             if (HeldUI == gameObject)
             {
-                Handheld.Vibrate();
-                Debug.Log("Held UI Object: " + gameObject.name);
+                if (GameManager.Instance.isBlockOnField == false)
+                {
+                    Vector3 placePosition = CalculateBlockPlacement(blockTransform, new Vector3 (0, 0, 0));
+                    GameObject fieldBlock = Instantiate(blockPrefab, placePosition ,blockTransform.rotation);
+                }
             }
         }
     }
