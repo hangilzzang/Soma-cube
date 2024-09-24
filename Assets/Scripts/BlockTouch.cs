@@ -87,14 +87,16 @@ public class BlockTouch : MonoBehaviour
     {
         // Get the screen position where the swipe started
         Vector2 startPos = finger.StartScreenPosition;
-
+        Vector2 currentPos = finger.ScreenPosition;
         // Raycast results
-        List<RaycastResult> results = GetUIRaycastResults(startPos);
+        List<RaycastResult> startResults = GetUIRaycastResults(startPos);
+        List<RaycastResult> endResults = GetUIRaycastResults(currentPos);
 
-        if (results.Count > 0)
+        if (startResults.Count > 0 && endResults.Count > 0)
         {
-            GameObject swipedUI = results[0].gameObject;
-            if (swipedUI == gameObject && !DOTween.IsTweening(blockTransform))
+            GameObject swipedUI1 = startResults[0].gameObject;
+            GameObject swipedUI2 = endResults[0].gameObject;
+            if (swipedUI1 == gameObject && swipedUI2 == gameObject && !DOTween.IsTweening(blockTransform))
             {
                 Vector2 swipeDelta = finger.SwipeScreenDelta;
 
