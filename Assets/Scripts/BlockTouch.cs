@@ -67,11 +67,16 @@ public class BlockTouch : MonoBehaviour
     void HandleFingerHeld(LeanFinger finger)
     {
         Vector2 startPos = finger.StartScreenPosition;
-        List<RaycastResult> results = GetUIRaycastResults(startPos);
-        if (results.Count > 0)
+        Vector2 EndPos = finger.LastScreenPosition;
+
+        List<RaycastResult> startResults = GetUIRaycastResults(startPos);
+        List<RaycastResult> endResults = GetUIRaycastResults(EndPos);
+        
+        if (startResults.Count > 0 && endResults.Count > 0)
         {
-            GameObject HeldUI = results[0].gameObject;
-            if (HeldUI == gameObject)
+            GameObject heldUI1 = startResults[0].gameObject;
+            GameObject heldUI2 = endResults[0].gameObject;
+            if (heldUI1 == gameObject && heldUI2 == gameObject)
             {
                 if (GameManager.Instance.isBlockOnField == false)
                 {
@@ -87,16 +92,13 @@ public class BlockTouch : MonoBehaviour
     {
         // Get the screen position where the swipe started
         Vector2 startPos = finger.StartScreenPosition;
-        Vector2 currentPos = finger.ScreenPosition;
         // Raycast results
         List<RaycastResult> startResults = GetUIRaycastResults(startPos);
-        List<RaycastResult> endResults = GetUIRaycastResults(currentPos);
 
-        if (startResults.Count > 0 && endResults.Count > 0)
+        if (startResults.Count > 0)
         {
-            GameObject swipedUI1 = startResults[0].gameObject;
-            GameObject swipedUI2 = endResults[0].gameObject;
-            if (swipedUI1 == gameObject && swipedUI2 == gameObject && !DOTween.IsTweening(blockTransform))
+            GameObject swipedUI = startResults[0].gameObject;
+            if (swipedUI == gameObject && !DOTween.IsTweening(blockTransform))
             {
                 Vector2 swipeDelta = finger.SwipeScreenDelta;
 

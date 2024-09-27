@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 8
+  offset: 15
   target: {x: 0, y: 0, z: 0}
 --- !u!4 &145318509 stripped
 Transform:
@@ -585,7 +585,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 8247
+    m_Bits: 8246
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 4c357338f4ead474e905ad2259bcb3a4, type: 2}
   m_TargetDisplay: 0
@@ -795,6 +795,8 @@ MonoBehaviour:
   leftRightThreshold: 3
   blockTransform: {fileID: 1557448080}
   rotateDuration: 0.5
+  blockPrefab: {fileID: 5938625246454446789, guid: 41daf59efd00da7479ca1a184ca7fb5d,
+    type: 3}
 --- !u!114 &246750537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -897,6 +899,8 @@ MonoBehaviour:
   leftRightThreshold: 3
   blockTransform: {fileID: 633031157}
   rotateDuration: 0.5
+  blockPrefab: {fileID: 5352813572504459212, guid: 3dce348691fe85b459ad3ebe4cde74d4,
+    type: 3}
 --- !u!114 &297235888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -999,6 +1003,8 @@ MonoBehaviour:
   leftRightThreshold: 3
   blockTransform: {fileID: 145318509}
   rotateDuration: 0.5
+  blockPrefab: {fileID: 814793999279372121, guid: d3f1ddb3321565042876efc6c8df4400,
+    type: 3}
 --- !u!114 &390486019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1012,6 +1018,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates: []
+--- !u!1 &514951104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 514951106}
+  - component: {fileID: 514951105}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &514951105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514951104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f814c4d75f311499681396445edf30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBlockOnField: 0
+--- !u!4 &514951106
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514951104}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -7.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &516616702
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1329,7 +1380,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 183
+    m_Bits: 182
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 9f58ca25049bcec439d195a43fb1fab2, type: 2}
   m_TargetDisplay: 0
@@ -1390,7 +1441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fc98219a83dff145947365dc914d06e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tapThreshold: 0.2
+  tapThreshold: 0.5
   swipeThreshold: 100
   referenceDpi: 200
   guiLayers:
@@ -1635,7 +1686,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1079
+    m_Bits: 1078
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: a3bed823eb269db4f9eb3b617d3609be, type: 2}
   m_TargetDisplay: 0
@@ -1736,6 +1787,8 @@ MonoBehaviour:
   leftRightThreshold: 3
   blockTransform: {fileID: 153401955}
   rotateDuration: 0.5
+  blockPrefab: {fileID: 765400782370539993, guid: b38ad314e5246be43aa405075c4cdd38,
+    type: 3}
 --- !u!114 &834608018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1835,7 +1888,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4151
+    m_Bits: 4150
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 5e1007209504ffa4081396c82d980ca6, type: 2}
   m_TargetDisplay: 0
@@ -1970,6 +2023,8 @@ MonoBehaviour:
   leftRightThreshold: 3
   blockTransform: {fileID: 1797787701}
   rotateDuration: 0.5
+  blockPrefab: {fileID: 3257890749365021945, guid: c69a855f7af52fa418debe0760e4806e,
+    type: 3}
 --- !u!114 &1031170722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2974,6 +3029,8 @@ MonoBehaviour:
   leftRightThreshold: 3
   blockTransform: {fileID: 35934900}
   rotateDuration: 0.5
+  blockPrefab: {fileID: 4036498840473866898, guid: 7e39b3314e437df4eb703acf932473a6,
+    type: 3}
 --- !u!114 &1643626243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3429,6 +3486,8 @@ MonoBehaviour:
   leftRightThreshold: 3
   blockTransform: {fileID: 1849935730}
   rotateDuration: 0.5
+  blockPrefab: {fileID: 6607149904588218386, guid: 8ed85af93c9af4b4f877bcf700195588,
+    type: 3}
 --- !u!114 &1835221137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3628,7 +3687,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2103
+    m_Bits: 2102
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 290443390ab6445478c389540d849638, type: 2}
   m_TargetDisplay: 0
@@ -3726,7 +3785,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 567
+    m_Bits: 566
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 66ea7954d2562bf4d9d7b93fd42d91b4, type: 2}
   m_TargetDisplay: 0
@@ -3839,7 +3898,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1013961315}
@@ -3930,7 +3989,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 310
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: b24ef10e72e51974ba6d397ba3033238, type: 2}
   m_TargetDisplay: 0
@@ -4146,6 +4205,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 514951106}
   - {fileID: 686939699}
   - {fileID: 1013961315}
   - {fileID: 1168472921}
