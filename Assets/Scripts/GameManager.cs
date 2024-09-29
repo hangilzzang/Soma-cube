@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public bool isBlockOnField = false;
+    // public bool isBlockOnField = false;
     void Awake()
     {
         if (Instance == null)

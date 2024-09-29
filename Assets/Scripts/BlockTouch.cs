@@ -9,15 +9,20 @@ using DG.Tweening;
 public class BlockTouch : MonoBehaviour
 {
     public float leftRightThreshold = 3f;
-    public Transform blockTransform;
+    public Transform blockTransform; // 핸드 블록 트랜스폼 컴포넌트
     public float rotateDuration = 0.5f; // 회전 애니메이션 지속 시간
-    public GameObject blockPrefab;
+    public GameObject blockPrefab; // 필드배치 블록 프리팹
+    public bool draging = false;
+    public int offset = 2; // 배치위치 조절 프리팹
+    public GameObject fieldBlock; // 필드에 실제로 배치되는 블록
 
     void OnEnable()
     {
         // 스와이프 이벤트 구독
         LeanTouch.OnFingerSwipe += HandleFingerSwipe;
         LeanTouch.OnFingerOld += HandleFingerHeld;
+        LeanTouch.OnFingerUpdate += HandleFingerUpdate;
+        LeanTouch.OnFingerUp += HandleFingerUp;
     }
 
     void OnDisable()
@@ -25,6 +30,8 @@ public class BlockTouch : MonoBehaviour
         // 스와이프 이벤트 구독 해제
         LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
         LeanTouch.OnFingerOld -= HandleFingerHeld;
+        LeanTouch.OnFingerUpdate -= HandleFingerUpdate;
+        LeanTouch.OnFingerUp -= HandleFingerUp;
     }
 
     
@@ -76,16 +83,56 @@ public class BlockTouch : MonoBehaviour
         {
             GameObject heldUI1 = startResults[0].gameObject;
             GameObject heldUI2 = endResults[0].gameObject;
-            if (heldUI1 == gameObject && heldUI2 == gameObject)
+            if (heldUI1 == gameObject && heldUI2 == gameObject) // 꾹터치 만족 조건
             {
-                if (GameManager.Instance.isBlockOnField == false)
+                // if (GameManager.Instance.isBlockOnField == false)
+                // {
+                //     Vector3 placePosition = CalculateBlockPlacement(blockTransform, new Vector3 (0, 0, 0));
+                //     GameObject fieldBlock = Instantiate(blockPrefab, placePosition ,blockTransform.rotation);
+                // }
+
+                // 안보이는곳에 소환
+                fieldBlock = Instantiate(blockPrefab, new Vector3 (0, -5, 0) ,blockTransform.rotation);
+                // offset값 찾기(특정좌표위에 올라가도록 블럭을 배치하고싶을경우 계산해야하는 offset값)
+                int lowestY = -5;
+                foreach (Transform child in fieldBlock.transform)
                 {
-                    Vector3 placePosition = CalculateBlockPlacement(blockTransform, new Vector3 (0, 0, 0));
-                    GameObject fieldBlock = Instantiate(blockPrefab, placePosition ,blockTransform.rotation);
+                    if (child.position.x == 0 && child.position.z == 0)
+                    {
+                        if (child.position.y < lowestY)
+                        {
+                            lowestY = (int)child.position.y; // 갱신됨
+                        }
+                    }
                 }
+                offset = (-5 - lowestY + 1) * 2;
+
+
+
+                draging = true;
+                Debug.Log(offset);
             }
         }
     }
+
+    void HandleFingerUpdate(LeanFinger finger)
+    {
+        if (draging)
+        {
+            // Debug.Log(finger.ScreenPosition);
+        }
+    }
+
+    void HandleFingerUp(LeanFinger finger)
+    {
+        if (draging)
+        {
+            Debug.Log("drag finished");
+            draging = false;
+        }
+    }
+
+
     
     
     void HandleFingerSwipe(LeanFinger finger)
