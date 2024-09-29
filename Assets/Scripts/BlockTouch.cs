@@ -85,19 +85,13 @@ public class BlockTouch : MonoBehaviour
             GameObject heldUI2 = endResults[0].gameObject;
             if (heldUI1 == gameObject && heldUI2 == gameObject) // 꾹터치 만족 조건
             {
-                // if (GameManager.Instance.isBlockOnField == false)
-                // {
-                //     Vector3 placePosition = CalculateBlockPlacement(blockTransform, new Vector3 (0, 0, 0));
-                //     GameObject fieldBlock = Instantiate(blockPrefab, placePosition ,blockTransform.rotation);
-                // }
-
                 // 안보이는곳에 소환
                 fieldBlock = Instantiate(blockPrefab, new Vector3 (0, -5, 0) ,blockTransform.rotation);
                 // offset값 찾기(특정좌표위에 올라가도록 블럭을 배치하고싶을경우 계산해야하는 offset값)
                 int lowestY = -5;
                 foreach (Transform child in fieldBlock.transform)
                 {
-                    if (child.position.x == 0 && child.position.z == 0)
+                    if ((int)child.position.x == 0 && (int)child.position.z == 0)
                     {
                         if (child.position.y < lowestY)
                         {
@@ -105,10 +99,8 @@ public class BlockTouch : MonoBehaviour
                         }
                     }
                 }
-                offset = (-5 - lowestY + 1) * 2;
-
-
-
+                // Debug.Log(lowestY);
+                offset = (-5 - lowestY) + 2;
                 draging = true;
                 Debug.Log(offset);
             }
