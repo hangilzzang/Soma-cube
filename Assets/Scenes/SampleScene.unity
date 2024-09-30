@@ -2085,7 +2085,7 @@ Camera:
   m_GameObject: {fileID: 139552937}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -2104,9 +2104,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
+    y: 0.20833333
     width: 1
-    height: 1
+    height: 0.7916667
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -2139,7 +2139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 35
+  offset: 10
   target: {x: 0, y: 0, z: 0}
 --- !u!4 &146137302 stripped
 Transform:
@@ -3458,6 +3458,8 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 246750534}
+  boxCollider: {fileID: 0}
+  placeAble: 1
 --- !u!114 &246750537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4498,6 +4500,8 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 297235885}
+  boxCollider: {fileID: 0}
+  placeAble: 1
 --- !u!114 &297235888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5926,6 +5930,8 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 390486016}
+  boxCollider: {fileID: 0}
+  placeAble: 1
 --- !u!114 &390486019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10848,6 +10854,8 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 834608015}
+  boxCollider: {fileID: 0}
+  placeAble: 1
 --- !u!114 &834608018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13326,6 +13334,8 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 1031170719}
+  boxCollider: {fileID: 0}
+  placeAble: 1
 --- !u!114 &1031170722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20275,6 +20285,8 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 1643626240}
+  boxCollider: {fileID: 0}
+  placeAble: 1
 --- !u!114 &1643626243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22902,6 +22914,8 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 1835221134}
+  boxCollider: {fileID: 0}
+  placeAble: 1
 --- !u!114 &1835221137
 MonoBehaviour:
   m_ObjectHideFlags: 0
