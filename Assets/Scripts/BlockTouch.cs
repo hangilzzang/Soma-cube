@@ -15,6 +15,7 @@ public class BlockTouch : MonoBehaviour
     public bool draging = false;
     public int offset = 2; // 배치위치 조절 프리팹
     public GameObject fieldBlock; // 필드에 실제로 배치되는 블록
+    GameObject lastTouchedObject = null; // 마지막으로 터치한 물체
 
     void OnEnable()
     {
@@ -53,21 +54,21 @@ public class BlockTouch : MonoBehaviour
         return results;
     }
 
-    // 특정좌표(평면)에 블럭을 올리려할때 위치 계산
-        public Vector3 CalculateBlockPlacement(Transform blockTransform, Vector3 planePosition)
-    {
-        // 블럭의 크기와 중심을 계산
-        // Vector3 blockCenter = blockTransform.GetComponent<Renderer>().bounds.center;
-        Vector3 blockExtents = blockTransform.GetComponent<Renderer>().bounds.extents;
+    // // 특정좌표(평면)에 블럭을 올리려할때 위치 계산
+    //     public Vector3 CalculateBlockPlacement(Transform blockTransform, Vector3 planePosition)
+    // {
+    //     // 블럭의 크기와 중심을 계산
+    //     // Vector3 blockCenter = blockTransform.GetComponent<Renderer>().bounds.center;
+    //     Vector3 blockExtents = blockTransform.GetComponent<Renderer>().bounds.extents;
 
-        // 블럭의 중심과 최상단 간의 거리 계산
-        float topDistance = blockExtents.y;
+    //     // 블럭의 중심과 최상단 간의 거리 계산
+    //     float topDistance = blockExtents.y;
 
-        // 평면 위치에 블럭을 배치할 때, 중심이 평면 위로 오도록 위치 조정
-        Vector3 placementPosition = new Vector3(planePosition.x, planePosition.y + topDistance, planePosition.z);
+    //     // 평면 위치에 블럭을 배치할 때, 중심이 평면 위로 오도록 위치 조정
+    //     Vector3 placementPosition = new Vector3(planePosition.x, planePosition.y + topDistance, planePosition.z);
 
-        return placementPosition;
-    }
+    //     return placementPosition;
+    // }
 
 
     
@@ -102,7 +103,8 @@ public class BlockTouch : MonoBehaviour
                 // Debug.Log(lowestY);
                 offset = (-5 - lowestY) + 2;
                 draging = true;
-                Debug.Log(offset);
+                // Debug.Log(offset);
+                Debug.Log("drag start");
             }
         }
     }
@@ -111,7 +113,26 @@ public class BlockTouch : MonoBehaviour
     {
         if (draging)
         {
-            // Debug.Log(finger.ScreenPosition);
+            Ray ray = Camera.main.ScreenPointToRay(finger.ScreenPosition);
+            RaycastHit hit; 
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                GameObject touchedObject = hit.transform.gameObject;
+                Debug.Log(touchedObject);
+                if (touchedObject != lastTouchedObject && touchedObject.tag == "Block")
+                {
+                    // Debug.Log(touchedObject.name);
+                    // Debug.Log(fieldBlock.transform.position);
+                    // Debug.Log(touchedObject.transform.position);
+                    fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f);
+                    lastTouchedObject = touchedObject;
+                }
+                // else // 다른곳 터치했을경우 안보이는 위치로 다시 이동
+                // {
+                //     fieldBlock.transform.position = new Vector3 (0, -5, 0);
+                // }
+            }
         }
     }
 

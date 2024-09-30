@@ -2048,7 +2048,7 @@ GameObject:
   - component: {fileID: 139552941}
   m_Layer: 6
   m_Name: CameraField
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2139,7 +2139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 15
+  offset: 35
   target: {x: 0, y: 0, z: 0}
 --- !u!4 &146137302 stripped
 Transform:
@@ -3454,6 +3454,9 @@ MonoBehaviour:
   rotateDuration: 0.5
   blockPrefab: {fileID: 7153132430838004119, guid: 41daf59efd00da7479ca1a184ca7fb5d,
     type: 3}
+  draging: 0
+  offset: 2
+  fieldBlock: {fileID: 0}
 --- !u!114 &246750537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4490,6 +4493,9 @@ MonoBehaviour:
   rotateDuration: 0.5
   blockPrefab: {fileID: 1120430623641927849, guid: 3dce348691fe85b459ad3ebe4cde74d4,
     type: 3}
+  draging: 0
+  offset: 2
+  fieldBlock: {fileID: 0}
 --- !u!114 &297235888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5914,6 +5920,9 @@ MonoBehaviour:
   rotateDuration: 0.5
   blockPrefab: {fileID: 6664465475085256851, guid: 40afda05d373e794e96c01431c49bbe5,
     type: 3}
+  draging: 0
+  offset: 2
+  fieldBlock: {fileID: 0}
 --- !u!114 &390486019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6960,7 +6969,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2f814c4d75f311499681396445edf30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isBlockOnField: 0
 --- !u!4 &514951106
 Transform:
   m_ObjectHideFlags: 0
@@ -10833,6 +10841,9 @@ MonoBehaviour:
   rotateDuration: 0.5
   blockPrefab: {fileID: 6922828168806239961, guid: bac7c1c2eaf03d74ead61054ca82001f,
     type: 3}
+  draging: 0
+  offset: 2
+  fieldBlock: {fileID: 0}
 --- !u!114 &834608018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13307,6 +13318,9 @@ MonoBehaviour:
   rotateDuration: 0.5
   blockPrefab: {fileID: 5399013695569019861, guid: cd7c4a6e8afe87b46ac58cae5ecf2f11,
     type: 3}
+  draging: 0
+  offset: 2
+  fieldBlock: {fileID: 0}
 --- !u!114 &1031170722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20252,6 +20266,9 @@ MonoBehaviour:
   rotateDuration: 0.5
   blockPrefab: {fileID: 1233307688164673850, guid: 7e39b3314e437df4eb703acf932473a6,
     type: 3}
+  draging: 0
+  offset: 2
+  fieldBlock: {fileID: 0}
 --- !u!114 &1643626243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22875,6 +22892,9 @@ MonoBehaviour:
   rotateDuration: 0.5
   blockPrefab: {fileID: 3369502788775867679, guid: 23cd3b5b49282284cb47184eb88e6f65,
     type: 3}
+  draging: 0
+  offset: 2
+  fieldBlock: {fileID: 0}
 --- !u!114 &1835221137
 MonoBehaviour:
   m_ObjectHideFlags: 0
