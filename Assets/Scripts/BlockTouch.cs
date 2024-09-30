@@ -12,27 +12,33 @@ public class BlockTouch : MonoBehaviour
     public Transform blockTransform; // 핸드 블록 트랜스폼 컴포넌트
     public float rotateDuration = 0.5f; // 회전 애니메이션 지속 시간
     public GameObject blockPrefab; // 필드배치 블록 프리팹
-    public bool draging = false;
-    public int offset = 2; // 배치위치 조절 프리팹
-    public GameObject fieldBlock; // 필드에 실제로 배치되는 블록
+    public bool placement = false; // 배치중
+    public bool reposition = false; // 재배치중
+    public int offset = 2; //  프리팹 배치위치 조절 
+    GameObject fieldBlock = null; // 필드에 실제로 배치되는 블록
     GameObject lastTouchedObject = null; // 마지막으로 터치한 물체
+    public RawImage blockUI; // 배치하면 ui 비활성화 이펙트 주기위함
 
     void OnEnable()
     {
         // 스와이프 이벤트 구독
         LeanTouch.OnFingerSwipe += HandleFingerSwipe;
-        LeanTouch.OnFingerOld += HandleFingerHeld;
+        LeanTouch.OnFingerOld += HandleFingerHeld1;
         LeanTouch.OnFingerUpdate += HandleFingerUpdate;
         LeanTouch.OnFingerUp += HandleFingerUp;
+
+        LeanTouch.OnFingerOld += HandleFingerHeld2; 
     }
 
     void OnDisable()
     {
         // 스와이프 이벤트 구독 해제
         LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
-        LeanTouch.OnFingerOld -= HandleFingerHeld;
+        LeanTouch.OnFingerOld -= HandleFingerHeld1;
         LeanTouch.OnFingerUpdate -= HandleFingerUpdate;
         LeanTouch.OnFingerUp -= HandleFingerUp;
+
+        LeanTouch.OnFingerOld -= HandleFingerHeld2; 
     }
 
     
@@ -53,26 +59,9 @@ public class BlockTouch : MonoBehaviour
         // Raycast 결과 반환
         return results;
     }
-
-    // // 특정좌표(평면)에 블럭을 올리려할때 위치 계산
-    //     public Vector3 CalculateBlockPlacement(Transform blockTransform, Vector3 planePosition)
-    // {
-    //     // 블럭의 크기와 중심을 계산
-    //     // Vector3 blockCenter = blockTransform.GetComponent<Renderer>().bounds.center;
-    //     Vector3 blockExtents = blockTransform.GetComponent<Renderer>().bounds.extents;
-
-    //     // 블럭의 중심과 최상단 간의 거리 계산
-    //     float topDistance = blockExtents.y;
-
-    //     // 평면 위치에 블럭을 배치할 때, 중심이 평면 위로 오도록 위치 조정
-    //     Vector3 placementPosition = new Vector3(planePosition.x, planePosition.y + topDistance, planePosition.z);
-
-    //     return placementPosition;
-    // }
-
-
     
-    void HandleFingerHeld(LeanFinger finger)
+    // UI 꾹터치 반응함(배치)
+    void HandleFingerHeld1(LeanFinger finger)
     {
         Vector2 startPos = finger.StartScreenPosition;
         Vector2 EndPos = finger.LastScreenPosition;
@@ -102,49 +91,113 @@ public class BlockTouch : MonoBehaviour
                 }
                 // Debug.Log(lowestY);
                 offset = (-5 - lowestY) + 2;
-                draging = true;
+                placement = true;
                 // Debug.Log(offset);
-                Debug.Log("drag start");
+                // Debug.Log("drag start");
+
+            }
+        }
+    }
+
+    // 게임오브젝트 꾹터치 반응(위치옮기거나 삭제)
+    void HandleFingerHeld2(LeanFinger finger)
+    {
+        Vector2 startPos = finger.StartScreenPosition;
+        Vector2 EndPos = finger.LastScreenPosition;
+
+        Ray rayStart = Camera.main.ScreenPointToRay(startPos);
+        RaycastHit hitStart; 
+        Ray rayEnd = Camera.main.ScreenPointToRay(EndPos);
+        RaycastHit hitEnd; 
+
+        if (Physics.Raycast(rayStart, out hitStart) && Physics.Raycast(rayEnd, out hitEnd))
+        {
+            // 꾹터치 대상이 필드에 배치된 블록인지 확인
+            if (hitStart.transform.parent == fieldBlock?.transform && hitEnd.transform.parent == fieldBlock?.transform)
+            {
+
+                Debug.Log(fieldBlock);
+                // 콜라이더 비활성화
+                foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
+                {
+                    childCollider.enabled = false; 
+                }
+                // 리포지션 시작
+                reposition = true;
+
             }
         }
     }
 
     void HandleFingerUpdate(LeanFinger finger)
     {
-        if (draging)
+        if (placement || reposition)
         {
+            // 게임 오브젝트 감지(배치 목적)
             Ray ray = Camera.main.ScreenPointToRay(finger.ScreenPosition);
             RaycastHit hit; 
 
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Block") // 블럭을 감지한경우
             {
                 GameObject touchedObject = hit.transform.gameObject;
-                Debug.Log(touchedObject);
-                if (touchedObject != lastTouchedObject && touchedObject.tag == "Block")
+                if (touchedObject != lastTouchedObject) // 새로운블럭을 감지했는지 확인
                 {
+                    // Debug.Log(touchedObject);
                     // Debug.Log(touchedObject.name);
                     // Debug.Log(fieldBlock.transform.position);
                     // Debug.Log(touchedObject.transform.position);
-                    fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f);
+                    fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f); // 블럭오브젝트 포인터쪽으로 위치 변경
                     lastTouchedObject = touchedObject;
                 }
-                // else // 다른곳 터치했을경우 안보이는 위치로 다시 이동
-                // {
-                //     fieldBlock.transform.position = new Vector3 (0, -5, 0);
-                // }
             }
+            else // 안보이는 지점으로 이동
+            {
+                fieldBlock.transform.position = new Vector3 (0, -5, 0);
+            }
+
         }
     }
 
     void HandleFingerUp(LeanFinger finger)
     {
-        if (draging)
+        if (placement || reposition)
         {
-            Debug.Log("drag finished");
-            draging = false;
+            
+            Ray ray = Camera.main.ScreenPointToRay(finger.ScreenPosition);
+            RaycastHit hit; 
+            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Block") // 블럭에서 손가락을 땐경우
+            {
+                // 콜라이더 활성화
+                foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
+                {
+                    childCollider.enabled = true; 
+                }
+
+                // ui 비활성화 이펙트
+                blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
+                // 이벤트 구독 종료(스와이프 입력, 꾹터치 입력 못받음)
+                LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
+                LeanTouch.OnFingerOld -= HandleFingerHeld1;
+            }
+            else
+            {
+                Destroy(fieldBlock); // 기존 프리팹 파괴
+                fieldBlock = null;
+                 
+                if (reposition) // UI재활성화
+                {
+                    // ui 활성화 이펙트
+                    blockUI.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
+                    // 이벤트 구독 시작(스와이프 입력, 꾹터치 입력 다시 받음)
+                    LeanTouch.OnFingerSwipe += HandleFingerSwipe;
+                    LeanTouch.OnFingerOld += HandleFingerHeld1;
+                }
+            }
+            
+            placement = false;
+            reposition = false;
         }
     }
-
 
     
     
