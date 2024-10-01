@@ -115,6 +115,7 @@ public class BlockTouch : MonoBehaviour
             // 꾹터치 대상이 필드에 배치된 블록인지 확인
             if (hitStart.transform.parent == fieldBlock?.transform && hitEnd.transform.parent == fieldBlock?.transform)
             {
+                Debug.Log(fieldBlock?.transform);
                 // Debug.Log(fieldBlock);
                 // 콜라이더 비활성화
                 foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
