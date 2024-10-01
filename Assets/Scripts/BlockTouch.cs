@@ -16,9 +16,8 @@ public class BlockTouch : MonoBehaviour
     public bool reposition = false; // 재배치중
     public int offset = 2; //  프리팹 배치위치 조절 
     GameObject fieldBlock = null; // 필드에 실제로 배치되는 블록
-    GameObject lastTouchedObject = null; // 마지막으로 터치한 물체
     public RawImage blockUI; // 배치하면 ui 비활성화 이펙트 주기위함
-    public bool placeAble = true;
+    public bool placeAble;
 
     void OnEnable()
     {
@@ -122,6 +121,8 @@ public class BlockTouch : MonoBehaviour
                 {
                     childCollider.enabled = false; 
                 }
+                // 배치된 블럭 딕셔너리에서 위치 정보를 제거함
+                GameManager.Instance.RemoveParentObjectPositions(fieldBlock);
                 // 리포지션 시작
                 reposition = true;
 
@@ -140,13 +141,10 @@ public class BlockTouch : MonoBehaviour
             {
                 goto NotPlaceable;
             }
-            // 감지된 게임오브젝트 확인
-            GameObject touchedObject = hit.transform.gameObject;
-            if (touchedObject == lastTouchedObject) // 이전에 감지한 오브젝트와 같은 오브젝트임
-            {
-                return; // 이전결과(placeAble)를 따라간다 
-            }
             
+            GameObject touchedObject = hit.transform.gameObject; // 현재 터치중인 게임오브젝트 
+
+            // Debug.Log("다른거임");
             // ui 오브젝트 감지
             List<RaycastResult> results = GetUIRaycastResults(pos);
             if (results.Count > 0) // ui오브젝트가 존재함
@@ -154,15 +152,22 @@ public class BlockTouch : MonoBehaviour
                 goto NotPlaceable;
             }
 
-            // 겹치는 오브젝트가 있는지 확인
-            // (미구현)
-
-            placeAble = true;
+            // 블럭의 포지션을 바꾼다(확정x)
             fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f); // 블럭 게임 오브젝트 포인터쪽으로 위치 변경
-            lastTouchedObject = touchedObject;
+            
+            // 겹치는 오브젝트가 있는지 확인
+            if (GameManager.Instance.ArePositionsUnique(fieldBlock) == false) // 다른블럭과 겹쳐서 배치할수없는 경우
+            {
+                // Debug.Log("배치할수없어요");
+                goto NotPlaceable;
+            }
+
+            // 블럭 배치 가능 판정
+            // Debug.Log("배치 가능합니다");
+            placeAble = true;
             return;
 
-        NotPlaceable:
+        NotPlaceable: // 블럭 배치 불가능 판정
             placeAble = false; 
             fieldBlock.transform.position = new Vector3 (0, -5, 0);
             return;       
@@ -183,17 +188,24 @@ public class BlockTouch : MonoBehaviour
                     childCollider.enabled = true; 
                 }
 
+                // 배치된 블럭 딕셔너리에 위치 정보를 추가함
+                GameManager.Instance.AddParentObjectPositions(fieldBlock);
+                // Debug.Log(GameManager.Instance.positionSet);
+
                 // ui 비활성화 이펙트
                 blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
                 // 이벤트 구독 종료(스와이프 입력, 꾹터치 입력 못받음)
                 LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
                 LeanTouch.OnFingerOld -= HandleFingerHeld1;
             }
-            else
+            else // 제거
             {
+                // 배치된 블럭 딕셔너리에서 위치 정보를 제거함
+                GameManager.Instance.RemoveParentObjectPositions(fieldBlock);
+                
                 Destroy(fieldBlock); // 기존 프리팹 파괴
                 fieldBlock = null;
-                 
+ 
                 if (reposition) // UI재활성화
                 {
                     // ui 활성화 이펙트

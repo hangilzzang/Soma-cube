@@ -3458,7 +3458,6 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 246750534}
-  boxCollider: {fileID: 0}
   placeAble: 1
 --- !u!114 &246750537
 MonoBehaviour:
@@ -4500,7 +4499,6 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 297235885}
-  boxCollider: {fileID: 0}
   placeAble: 1
 --- !u!114 &297235888
 MonoBehaviour:
@@ -5930,7 +5928,6 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 390486016}
-  boxCollider: {fileID: 0}
   placeAble: 1
 --- !u!114 &390486019
 MonoBehaviour:
@@ -10854,7 +10851,6 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 834608015}
-  boxCollider: {fileID: 0}
   placeAble: 1
 --- !u!114 &834608018
 MonoBehaviour:
@@ -13334,7 +13330,6 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 1031170719}
-  boxCollider: {fileID: 0}
   placeAble: 1
 --- !u!114 &1031170722
 MonoBehaviour:
@@ -20285,7 +20280,6 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 1643626240}
-  boxCollider: {fileID: 0}
   placeAble: 1
 --- !u!114 &1643626243
 MonoBehaviour:
@@ -22914,7 +22908,6 @@ MonoBehaviour:
   reposition: 0
   offset: 2
   blockUI: {fileID: 1835221134}
-  boxCollider: {fileID: 0}
   placeAble: 1
 --- !u!114 &1835221137
 MonoBehaviour:
