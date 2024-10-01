@@ -2,11 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using Lean.Touch;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public Dictionary<GameObject, List<Vector3>> positionSet = new Dictionary<GameObject, List<Vector3>>(); // 배치된 블럭들의 정보를 담은 딕셔너리
+    public event Action<GameObject, Vector2> OnBlockSwipe;
+    
+    void OnEnable()
+    {
+        LeanTouch.OnFingerSwipe += HandleFingerSwipe;
+    }
+
+    void OnDisable()
+    {
+        LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
+    }
+    
+    
     void Awake()
     {
         if (Instance == null)
@@ -78,5 +94,35 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    
+    List<RaycastResult> GetUIRaycastResults(Vector2 pos)
+    {
+        // PointerEventData 생성
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = pos
+        };
+
+        // Raycast 결과를 저장할 리스트
+        var results = new List<RaycastResult>();
+
+        // Raycast 수행
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        // Raycast 결과 반환
+        return results;
+    }
+
+    void HandleFingerSwipe(LeanFinger finger) // 스와이프 이벤트 핸들러
+    {
+        Vector2 startPos = finger.StartScreenPosition;
+        // 레이케스트 결과
+        List<RaycastResult> startResults = GetUIRaycastResults(startPos);
+        
+        if (startResults.Count > 0) // 만약 ui 감지됐으면 블록스와이프 이벤트 발동
+        {
+            GameObject swipedUI = startResults[0].gameObject;
+            Vector2 swipeDelta = finger.SwipeScreenDelta;
+            OnBlockSwipe?.Invoke(swipedUI, swipeDelta);
+        }
+    }
 }

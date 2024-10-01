@@ -19,26 +19,24 @@ public class BlockTouch : MonoBehaviour
     public RawImage blockUI; // 배치하면 ui 비활성화 이펙트 주기위함
     public bool placeAble;
 
-    void OnEnable()
+    void Start()
     {
-        // 스와이프 이벤트 구독
-        LeanTouch.OnFingerSwipe += HandleFingerSwipe;
         LeanTouch.OnFingerOld += HandleFingerHeld1;
         LeanTouch.OnFingerUpdate += HandleFingerUpdate;
         LeanTouch.OnFingerUp += HandleFingerUp;
 
         LeanTouch.OnFingerOld += HandleFingerHeld2; 
+        GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
     }
 
     void OnDisable()
     {
-        // 스와이프 이벤트 구독 해제
-        LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
         LeanTouch.OnFingerOld -= HandleFingerHeld1;
         LeanTouch.OnFingerUpdate -= HandleFingerUpdate;
         LeanTouch.OnFingerUp -= HandleFingerUp;
 
         LeanTouch.OnFingerOld -= HandleFingerHeld2; 
+        GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
     }
 
     
@@ -196,7 +194,7 @@ public class BlockTouch : MonoBehaviour
                 // ui 비활성화 이펙트
                 blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
                 // 이벤트 구독 종료(스와이프 입력, 꾹터치 입력 못받음)
-                LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
+                GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
                 LeanTouch.OnFingerOld -= HandleFingerHeld1;
             }
             else // 제거
@@ -212,7 +210,7 @@ public class BlockTouch : MonoBehaviour
                     // ui 활성화 이펙트
                     blockUI.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
                     // 이벤트 구독 시작(스와이프 입력, 꾹터치 입력 다시 받음)
-                    LeanTouch.OnFingerSwipe += HandleFingerSwipe;
+                    GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
                     LeanTouch.OnFingerOld += HandleFingerHeld1;
                 }
             }
@@ -222,53 +220,40 @@ public class BlockTouch : MonoBehaviour
         }
     }
 
-    
-    
-    void HandleFingerSwipe(LeanFinger finger)
+    void HandleBlockSwipe(GameObject swipedUI, Vector2 swipeDelta) // 블록스와이프 이벤트 핸들러
     {
-        // Get the screen position where the swipe started
-        Vector2 startPos = finger.StartScreenPosition;
-        // Raycast results
-        List<RaycastResult> startResults = GetUIRaycastResults(startPos);
-
-        if (startResults.Count > 0)
+        if (swipedUI == gameObject && !DOTween.IsTweening(blockTransform))
         {
-            GameObject swipedUI = startResults[0].gameObject;
-            if (swipedUI == gameObject && !DOTween.IsTweening(blockTransform))
+            // y축
+            if (Mathf.Abs(swipeDelta.x) > leftRightThreshold * Mathf.Abs(swipeDelta.y))
             {
-                Vector2 swipeDelta = finger.SwipeScreenDelta;
-
-                // y축
-                if (Mathf.Abs(swipeDelta.x) > leftRightThreshold * Mathf.Abs(swipeDelta.y))
+                if (swipeDelta.x > 0)
                 {
-                    if (swipeDelta.x > 0)
-                    {
-                        blockTransform.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                    }
-                    else
-                    {
-                        blockTransform.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                    }
+                    blockTransform.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 }
                 else
                 {
-                    // x축, z축
-                    if (swipeDelta.x > 0 && swipeDelta.y > 0)
-                    {
-                        blockTransform.DORotate(new Vector3(0, 0, 90), rotateDuration, RotateMode.WorldAxisAdd);
-                    }
-                    else if (swipeDelta.x < 0 && swipeDelta.y > 0)
-                    {
-                        blockTransform.DORotate(new Vector3(-90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                    }
-                    else if (swipeDelta.x < 0 && swipeDelta.y < 0)
-                    {
-                        blockTransform.DORotate(new Vector3(0, 0, -90), rotateDuration, RotateMode.WorldAxisAdd);
-                    }
-                    else if (swipeDelta.x > 0 && swipeDelta.y < 0)
-                    {
-                        blockTransform.DORotate(new Vector3(90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                    }
+                    blockTransform.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                }
+            }
+            else
+            {
+                // x축, z축
+                if (swipeDelta.x > 0 && swipeDelta.y > 0)
+                {
+                    blockTransform.DORotate(new Vector3(0, 0, 90), rotateDuration, RotateMode.WorldAxisAdd);
+                }
+                else if (swipeDelta.x < 0 && swipeDelta.y > 0)
+                {
+                    blockTransform.DORotate(new Vector3(-90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                }
+                else if (swipeDelta.x < 0 && swipeDelta.y < 0)
+                {
+                    blockTransform.DORotate(new Vector3(0, 0, -90), rotateDuration, RotateMode.WorldAxisAdd);
+                }
+                else if (swipeDelta.x > 0 && swipeDelta.y < 0)
+                {
+                    blockTransform.DORotate(new Vector3(90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 }
             }
         }
