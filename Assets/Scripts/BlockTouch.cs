@@ -111,17 +111,16 @@ public class BlockTouch : MonoBehaviour
         Ray rayEnd = Camera.main.ScreenPointToRay(EndPos);
         RaycastHit hitEnd; 
 
-        if (Physics.Raycast(rayStart, out hitStart, float.MaxValue, ~0, QueryTriggerInteraction.Ignore) && Physics.Raycast(rayEnd, out hitEnd, float.MaxValue, ~0, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(rayStart, out hitStart) && Physics.Raycast(rayEnd, out hitEnd))
         {
             // 꾹터치 대상이 필드에 배치된 블록인지 확인
             if (hitStart.transform.parent == fieldBlock?.transform && hitEnd.transform.parent == fieldBlock?.transform)
             {
-
                 // Debug.Log(fieldBlock);
                 // 콜라이더 비활성화
                 foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
                 {
-                    childCollider.isTrigger = true; 
+                    childCollider.enabled = false; 
                 }
                 // 리포지션 시작
                 reposition = true;
@@ -129,83 +128,59 @@ public class BlockTouch : MonoBehaviour
             }
         }
     }
-
     void HandleFingerUpdate(LeanFinger finger)
     {
         if (placement || reposition)
         {
-            placeAble = true;
+            // 게임 오브젝트 감지
             Vector2 pos = finger.ScreenPosition;
-            List<RaycastResult> results = GetUIRaycastResults(pos);
-
-            // 게임 오브젝트 감지(배치 목적)
-            Ray ray = Camera.main.ScreenPointToRay(finger.ScreenPosition);
+            Ray ray = Camera.main.ScreenPointToRay(pos);
             RaycastHit hit; 
-
-            if (Physics.Raycast(ray, out hit, float.MaxValue, ~0, QueryTriggerInteraction.Ignore) && hit.transform.gameObject.tag == "PlacedBlock" && results.Count == 0) // UI가 아닌 블럭을 감지한경우
+            if (!(Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Block")) // 블럭 게임오브젝트를 감지하지못함
             {
-                GameObject touchedObject = hit.transform.gameObject;
-                if (touchedObject != lastTouchedObject) // 새로운블럭을 감지했는지 확인
-                {
-                    
-                    // 다른블럭과 겹치지 않는지 확인합니다
-                    foreach (Transform child in fieldBlock.transform) // fieldBlock의 각 자식을 순회
-                    {
-                        BoxCollider boxCollider = child.GetComponent<BoxCollider>(); 
-                        Vector3 boxCenter = child.TransformPoint(boxCollider.center); // 콜라이더 박스 센터 수집
-                        Vector3 boxSize = boxCollider.size; // 콜라이더 박스 크기
-                        Collider[] hitColliders = Physics.OverlapBox(boxCenter, boxSize / 2, child.rotation, ~0, QueryTriggerInteraction.Ignore);
-                        // foreach (var hitCollider in hitColliders) // 태그검사함
-                        // {
-                            // Debug.Log("Hit object tag: " + hitCollider.gameObject.tag);
-                            // if (hitCollider.CompareTag("PlacedBlock"))
-                            // {
-                            //     placeAble = false;
-                            //     break;
-                            // }
-                        // }
-                        if (hitColliders.Length > 0)
-                        {
-                            placeAble = false;
-                        }
-                    }
-
-                    if (placeAble)
-                    {
-                        fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f); // 블럭오브젝트 포인터쪽으로 위치 변경
-                        lastTouchedObject = touchedObject;
-                    }
-                    else // 안보이는 지점으로 이동
-                    {
-                        Debug.Log("placeable");
-                        fieldBlock.transform.position = new Vector3 (0, -5, 0);
-                    }
-
-                    // Debug.Log(finger.ScreenPosition);
-                    // Debug.Log(touchedObject.name);
-                    // Debug.Log(fieldBlock.transform.position);
-                    // Debug.Log(touchedObject.transform.position);
-                }
+                goto NotPlaceable;
             }
-            else // 안보이는 지점으로 이동
+            // 감지된 게임오브젝트 확인
+            GameObject touchedObject = hit.transform.gameObject;
+            if (touchedObject == lastTouchedObject) // 이전에 감지한 오브젝트와 같은 오브젝트임
             {
-                fieldBlock.transform.position = new Vector3 (0, -5, 0);
-                placeAble = false;
+                return; // 이전결과(placeAble)를 따라간다 
             }
+            
+            // ui 오브젝트 감지
+            List<RaycastResult> results = GetUIRaycastResults(pos);
+            if (results.Count > 0) // ui오브젝트가 존재함
+            {
+                goto NotPlaceable;
+            }
+
+            // 겹치는 오브젝트가 있는지 확인
+            // (미구현)
+
+            placeAble = true;
+            fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f); // 블럭 게임 오브젝트 포인터쪽으로 위치 변경
+            lastTouchedObject = touchedObject;
+            return;
+
+        NotPlaceable:
+            placeAble = false; 
+            fieldBlock.transform.position = new Vector3 (0, -5, 0);
+            return;       
 
         }
     }
+
 
     void HandleFingerUp(LeanFinger finger)
     {
         if (placement || reposition)
         {
-            if (placeAble) // UI가 아닌 블럭에서 손가락을 땐경우
+            if (placeAble) // 배치가능
             {
-                // 콜라이더 활성화
+                // 블럭의 자식 큐브 콜라이더 활성화
                 foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
                 {
-                    childCollider.isTrigger = false; 
+                    childCollider.enabled = true; 
                 }
 
                 // ui 비활성화 이펙트
