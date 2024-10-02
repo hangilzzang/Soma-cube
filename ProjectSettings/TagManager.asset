@@ -6,6 +6,7 @@ TagManager:
   tags:
   - BlockUI
   - Block
+  - BlockCube
   layers:
   - Default
   - TransparentFX

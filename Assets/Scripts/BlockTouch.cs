@@ -21,22 +21,26 @@ public class BlockTouch : MonoBehaviour
 
     void Start()
     {
-        LeanTouch.OnFingerOld += HandleFingerHeld1;
+        // LeanTouch.OnFingerOld += HandleFingerHeld1;
         LeanTouch.OnFingerUpdate += HandleFingerUpdate;
         LeanTouch.OnFingerUp += HandleFingerUp;
 
-        LeanTouch.OnFingerOld += HandleFingerHeld2; 
+        // LeanTouch.OnFingerOld += HandleFingerHeld2; 
         GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
+        GameManager.Instance.OnBlockUIOld += HandleBlockUIOld;
+        GameManager.Instance.OnBlockOld += HandleBlockOld;
     }
 
     void OnDisable()
     {
-        LeanTouch.OnFingerOld -= HandleFingerHeld1;
+        // LeanTouch.OnFingerOld -= HandleFingerHeld1;
         LeanTouch.OnFingerUpdate -= HandleFingerUpdate;
         LeanTouch.OnFingerUp -= HandleFingerUp;
 
-        LeanTouch.OnFingerOld -= HandleFingerHeld2; 
+        // LeanTouch.OnFingerOld -= HandleFingerHeld2; 
         GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
+        GameManager.Instance.OnBlockUIOld -= HandleBlockUIOld;
+        GameManager.Instance.OnBlockOld -= HandleBlockOld;
     }
 
     
@@ -59,75 +63,48 @@ public class BlockTouch : MonoBehaviour
     }
     
     // UI 꾹터치 반응함(배치)
-    void HandleFingerHeld1(LeanFinger finger)
+    void HandleBlockUIOld(GameObject heldUI1, GameObject heldUI2)
     {
-        Vector2 startPos = finger.StartScreenPosition;
-        Vector2 EndPos = finger.LastScreenPosition;
-
-        List<RaycastResult> startResults = GetUIRaycastResults(startPos);
-        List<RaycastResult> endResults = GetUIRaycastResults(EndPos);
-        
-        if (startResults.Count > 0 && endResults.Count > 0)
+        if (heldUI1 == gameObject && heldUI2 == gameObject) // 꾹터치 만족 조건
         {
-            GameObject heldUI1 = startResults[0].gameObject;
-            GameObject heldUI2 = endResults[0].gameObject;
-            if (heldUI1 == gameObject && heldUI2 == gameObject) // 꾹터치 만족 조건
+            // 안보이는곳에 소환
+            fieldBlock = Instantiate(blockPrefab, new Vector3 (0, -5, 0) ,blockTransform.rotation);
+            // offset값 찾기(특정좌표위에 올라가도록 블럭을 배치하고싶을경우 계산해야하는 offset값)
+            int lowestY = -5;
+            foreach (Transform child in fieldBlock.transform)
             {
-                // 안보이는곳에 소환
-                fieldBlock = Instantiate(blockPrefab, new Vector3 (0, -5, 0) ,blockTransform.rotation);
-                // offset값 찾기(특정좌표위에 올라가도록 블럭을 배치하고싶을경우 계산해야하는 offset값)
-                int lowestY = -5;
-                foreach (Transform child in fieldBlock.transform)
+                if ((int)child.position.x == 0 && (int)child.position.z == 0)
                 {
-                    if ((int)child.position.x == 0 && (int)child.position.z == 0)
+                    if (child.position.y < lowestY)
                     {
-                        if (child.position.y < lowestY)
-                        {
-                            lowestY = (int)child.position.y; // 갱신됨
-                        }
+                        lowestY = (int)child.position.y; // 갱신됨
                     }
                 }
-                // Debug.Log(lowestY);
-                offset = (-5 - lowestY) + 2;
-                placement = true;
-                // Debug.Log(offset);
-                // Debug.Log("drag start");
-
             }
+            // Debug.Log(lowestY);
+            offset = (-5 - lowestY) + 2;
+            placement = true;
         }
     }
 
     // 게임오브젝트 꾹터치 반응(위치옮기거나 삭제)
-    void HandleFingerHeld2(LeanFinger finger)
+    void HandleBlockOld(Transform startBlock, Transform endBlock)
     {
-        Vector2 startPos = finger.StartScreenPosition;
-        Vector2 EndPos = finger.LastScreenPosition;
-
-        Ray rayStart = Camera.main.ScreenPointToRay(startPos);
-        RaycastHit hitStart; 
-        Ray rayEnd = Camera.main.ScreenPointToRay(EndPos);
-        RaycastHit hitEnd; 
-
-        if (Physics.Raycast(rayStart, out hitStart) && Physics.Raycast(rayEnd, out hitEnd))
+        if (startBlock == fieldBlock?.transform && endBlock == fieldBlock?.transform)
         {
-            // 꾹터치 대상이 필드에 배치된 블록인지 확인
-            if (hitStart.transform.parent == fieldBlock?.transform && hitEnd.transform.parent == fieldBlock?.transform)
+            // 콜라이더 비활성화
+            foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
             {
-                Debug.Log(fieldBlock?.transform);
-                // Debug.Log(fieldBlock);
-                // 콜라이더 비활성화
-                foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
-                {
-                    childCollider.enabled = false; 
-                }
-                // 배치된 블럭 딕셔너리에서 위치 정보를 제거함
-                GameManager.Instance.RemoveParentObjectPositions(fieldBlock);
-                // 리포지션 시작
-                reposition = true;
-
-            }
+                childCollider.enabled = false; 
+            } 
+            // 배치된 블럭 딕셔너리에서 위치 정보를 제거함
+            GameManager.Instance.RemoveParentObjectPositions(fieldBlock);
+            // 리포지션 시작
+            reposition = true;
         }
     }
+
+
     void HandleFingerUpdate(LeanFinger finger)
     {
         if (placement || reposition)
@@ -136,7 +113,7 @@ public class BlockTouch : MonoBehaviour
             Vector2 pos = finger.ScreenPosition;
             Ray ray = Camera.main.ScreenPointToRay(pos);
             RaycastHit hit; 
-            if (!(Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "Block")) // 블럭 게임오브젝트를 감지하지못함
+            if (!(Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "BlockCube")) // 블럭 게임오브젝트를 감지하지못함
             {
                 goto NotPlaceable;
             }
@@ -195,7 +172,7 @@ public class BlockTouch : MonoBehaviour
                 blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
                 // 이벤트 구독 종료(스와이프 입력, 꾹터치 입력 못받음)
                 GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
-                LeanTouch.OnFingerOld -= HandleFingerHeld1;
+                GameManager.Instance.OnBlockUIOld -= HandleBlockUIOld;
             }
             else // 제거
             {
@@ -211,7 +188,7 @@ public class BlockTouch : MonoBehaviour
                     blockUI.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
                     // 이벤트 구독 시작(스와이프 입력, 꾹터치 입력 다시 받음)
                     GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
-                    LeanTouch.OnFingerOld += HandleFingerHeld1;
+                    GameManager.Instance.OnBlockUIOld += HandleBlockUIOld;
                 }
             }
             

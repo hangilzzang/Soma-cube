@@ -10,16 +10,24 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public Dictionary<GameObject, List<Vector3>> positionSet = new Dictionary<GameObject, List<Vector3>>(); // 배치된 블럭들의 정보를 담은 딕셔너리
-    public event Action<GameObject, Vector2> OnBlockSwipe;
+    public event Action<GameObject, Vector2> OnBlockSwipe; // 블록스와이프 이벤트
+    public event Action<GameObject, GameObject> OnBlockUIOld; // 블록UI 꾹터치 이벤트
+    public event Action<Transform, Transform> OnBlockOld; // 블록UI 꾹터치 이벤트
+    public bool placement;
+    public bool reposition;
     
     void OnEnable()
     {
         LeanTouch.OnFingerSwipe += HandleFingerSwipe;
+        LeanTouch.OnFingerOld += HandleFingerOld1;
+        LeanTouch.OnFingerOld += HandleFingerOld2; 
     }
 
     void OnDisable()
     {
         LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
+        LeanTouch.OnFingerOld -= HandleFingerOld1;
+        LeanTouch.OnFingerOld -= HandleFingerOld2; 
     }
     
     
@@ -118,11 +126,57 @@ public class GameManager : MonoBehaviour
         // 레이케스트 결과
         List<RaycastResult> startResults = GetUIRaycastResults(startPos);
         
-        if (startResults.Count > 0) // 만약 ui 감지됐으면 블록스와이프 이벤트 발동
+        if (startResults.Count > 0) 
         {
             GameObject swipedUI = startResults[0].gameObject;
-            Vector2 swipeDelta = finger.SwipeScreenDelta;
-            OnBlockSwipe?.Invoke(swipedUI, swipeDelta);
+            if (swipedUI.tag == "BlockUI") // 만약 블록 UI 감지됐으면 블록스와이프 이벤트 발동
+            {
+                Vector2 swipeDelta = finger.SwipeScreenDelta;
+                OnBlockSwipe?.Invoke(swipedUI, swipeDelta);
+            }
+        }
+    }
+
+    void HandleFingerOld1(LeanFinger finger)
+    {
+        Vector2 startPos = finger.StartScreenPosition;
+        Vector2 EndPos = finger.LastScreenPosition;
+
+        List<RaycastResult> startResults = GetUIRaycastResults(startPos);
+        List<RaycastResult> endResults = GetUIRaycastResults(EndPos);
+        
+        if (startResults.Count > 0 && endResults.Count > 0) // 
+        {
+            GameObject heldUI1 = startResults[0].gameObject;
+            GameObject heldUI2 = endResults[0].gameObject;
+            if (heldUI1 == heldUI2 && heldUI1.tag == "BlockUI" && heldUI2.tag == "BlockUI") // 두 터치 모두 같은 블록 UI를 터치
+            {
+                OnBlockUIOld?.Invoke(heldUI1, heldUI2);
+            }
+        }
+    }
+
+    
+    void HandleFingerOld2(LeanFinger finger)
+    {
+        Vector2 startPos = finger.StartScreenPosition;
+        Vector2 EndPos = finger.LastScreenPosition;
+
+        Ray rayStart = Camera.main.ScreenPointToRay(startPos);
+        RaycastHit hitStart; 
+        Ray rayEnd = Camera.main.ScreenPointToRay(EndPos);
+        RaycastHit hitEnd; 
+
+        // 레이케스트 결과: 모두 게임오브젝트에 충돌
+        if (Physics.Raycast(rayStart, out hitStart) && Physics.Raycast(rayEnd, out hitEnd)) 
+        {
+            Transform startBlock = hitStart.transform.parent;
+            Transform endBlock = hitEnd.transform.parent;
+            // 동일한 블록을 가르키는지 확인,  태그 확인
+            if (startBlock == endBlock && startBlock.CompareTag("Block"))
+            {
+                OnBlockOld?.Invoke(startBlock, endBlock);
+            }
         }
     }
 }
