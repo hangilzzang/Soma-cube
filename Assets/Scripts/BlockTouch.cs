@@ -21,11 +21,8 @@ public class BlockTouch : MonoBehaviour
 
     void Start()
     {
-        // LeanTouch.OnFingerOld += HandleFingerHeld1;
         LeanTouch.OnFingerUpdate += HandleFingerUpdate;
         LeanTouch.OnFingerUp += HandleFingerUp;
-
-        // LeanTouch.OnFingerOld += HandleFingerHeld2; 
         GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
         GameManager.Instance.OnBlockUIOld += HandleBlockUIOld;
         GameManager.Instance.OnBlockOld += HandleBlockOld;
@@ -33,11 +30,8 @@ public class BlockTouch : MonoBehaviour
 
     void OnDisable()
     {
-        // LeanTouch.OnFingerOld -= HandleFingerHeld1;
         LeanTouch.OnFingerUpdate -= HandleFingerUpdate;
         LeanTouch.OnFingerUp -= HandleFingerUp;
-
-        // LeanTouch.OnFingerOld -= HandleFingerHeld2; 
         GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
         GameManager.Instance.OnBlockUIOld -= HandleBlockUIOld;
         GameManager.Instance.OnBlockOld -= HandleBlockOld;
