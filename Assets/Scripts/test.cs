@@ -28,5 +28,6 @@ public class test : MonoBehaviour
 
         // 계산된 bounds의 중심을 반환합니다.
         return bounds.center;
+        // ㅋㅋ
     }
 }
