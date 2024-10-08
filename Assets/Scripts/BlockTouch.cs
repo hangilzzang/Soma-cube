@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Lean.Touch;
 using DG.Tweening;
+using System;
 
 public class BlockTouch : MonoBehaviour
 {
@@ -18,7 +19,6 @@ public class BlockTouch : MonoBehaviour
     GameObject fieldBlock = null; // 필드에 실제로 배치되는 블록
     public RawImage blockUI; // 배치하면 ui 비활성화 이펙트 주기위함
     public bool placeAble;
-
     void Start()
     {
         LeanTouch.OnFingerUpdate += HandleFingerUpdate;

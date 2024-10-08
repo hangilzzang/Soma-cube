@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
     public event Action<Transform, Transform> OnBlockOld; // 블록UI 꾹터치 이벤트
     public bool placement;
     public bool reposition;
+    public event Action OnBlockPlaced; // 블럭이 배치될때 실행되는 이벤트
+    void TriggerOnBlockPlaced()
+    {
+        OnBlockPlaced?.Invoke();
+    }
     
     void OnEnable()
     {
