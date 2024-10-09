@@ -16,7 +16,9 @@ public class GameManager : MonoBehaviour
     public bool placement;
     public bool reposition;
     public event Action OnBlockPlaced; // 블럭이 배치될때 실행되는 이벤트
-    void TriggerOnBlockPlaced()
+    public Vector3 blocksCenter;
+    
+    public void TriggerOnBlockPlaced()
     {
         OnBlockPlaced?.Invoke();
     }
@@ -183,5 +185,47 @@ public class GameManager : MonoBehaviour
                 OnBlockOld?.Invoke(startBlock, endBlock);
             }
         }
+    }
+
+    public void GetCenterPoint()
+    {
+        // 만약 배치된 블럭이 없을경우
+        if (positionSet.Count == 0)
+        {
+            blocksCenter = Vector3.zero;
+        }
+
+        // 매우 큰 초기값과 매우 작은 초기값 설정
+        float minX = float.MaxValue;
+        float minY = float.MaxValue;
+        float minZ = float.MaxValue;
+
+        float maxX = float.MinValue;
+        float maxY = float.MinValue;
+        float maxZ = float.MinValue;
+
+        // 딕셔너리의 모든 Vector3 값들을 순회하며 가장 작은 값과 가장 큰 값을 찾음
+        foreach (var key in positionSet)
+        {
+            foreach (var pos in key.Value)
+            {
+                // 각 축에 대해 가장 작은 값과 가장 큰 값 갱신
+                if (pos.x < minX) minX = pos.x;
+                if (pos.y < minY) minY = pos.y;
+                if (pos.z < minZ) minZ = pos.z;
+
+                if (pos.x > maxX) maxX = pos.x;
+                if (pos.y > maxY) maxY = pos.y;
+                if (pos.z > maxZ) maxZ = pos.z;
+            }
+        }
+
+        // 중간 지점 계산
+        float centerX = (minX + maxX) / 2;
+        float centerY = (minY + maxY) / 2;
+        float centerZ = (minZ + maxZ) / 2;
+
+        // 필드값에 할당
+        blocksCenter = new Vector3(centerX, centerY, centerZ);
     }
 }

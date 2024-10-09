@@ -99,6 +99,7 @@ public class BlockTouch : MonoBehaviour
     }
 
 
+    // 블럭의 이동
     void HandleFingerUpdate(LeanFinger finger)
     {
         if (placement || reposition)
@@ -185,7 +186,11 @@ public class BlockTouch : MonoBehaviour
                     GameManager.Instance.OnBlockUIOld += HandleBlockUIOld;
                 }
             }
-            
+
+            // 필드 카메라 위치 조정
+            GameManager.Instance.GetCenterPoint(); // 배치된 블럭들의 중점 계산
+            GameManager.Instance.TriggerOnBlockPlaced(); // 이벤트 실행
+
             placement = false;
             reposition = false;
         }
