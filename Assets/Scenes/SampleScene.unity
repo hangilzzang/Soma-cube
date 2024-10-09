@@ -2143,8 +2143,8 @@ MonoBehaviour:
   target: {x: 0, y: 0, z: 0}
   duration: 1
   zoomSpeed: 10
-  maxOffset: 40
-  minOffset: 5
+  maxOffset: 45
+  minOffset: 4
 --- !u!4 &146137302 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1390260392092281052, guid: 761a84262b5af1e469400d8afe3e6afb,
@@ -3463,6 +3463,7 @@ MonoBehaviour:
   offset: 2
   blockUI: {fileID: 246750534}
   placeAble: 1
+  blocks: {fileID: 1161827894}
 --- !u!114 &246750537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4504,6 +4505,7 @@ MonoBehaviour:
   offset: 2
   blockUI: {fileID: 297235885}
   placeAble: 1
+  blocks: {fileID: 1161827894}
 --- !u!114 &297235888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5933,6 +5935,7 @@ MonoBehaviour:
   offset: 2
   blockUI: {fileID: 390486016}
   placeAble: 1
+  blocks: {fileID: 1161827894}
 --- !u!114 &390486019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10859,6 +10862,7 @@ MonoBehaviour:
   offset: 2
   blockUI: {fileID: 834608015}
   placeAble: 1
+  blocks: {fileID: 1161827894}
 --- !u!114 &834608018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12882,6 +12886,7 @@ Transform:
   - {fileID: 139552938}
   - {fileID: 705507995}
   - {fileID: 1861427175}
+  - {fileID: 1161827894}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1017344452
@@ -13338,6 +13343,7 @@ MonoBehaviour:
   offset: 2
   blockUI: {fileID: 1031170719}
   placeAble: 1
+  blocks: {fileID: 1161827894}
 --- !u!114 &1031170722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14660,6 +14666,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 531755921}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1161827893
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1161827894}
+  m_Layer: 6
+  m_Name: Blocks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1161827894
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161827893}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1013961315}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1163474064 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1390260392092281052, guid: 761a84262b5af1e469400d8afe3e6afb,
@@ -20318,6 +20355,7 @@ MonoBehaviour:
   offset: 2
   blockUI: {fileID: 1643626240}
   placeAble: 1
+  blocks: {fileID: 1161827894}
 --- !u!114 &1643626243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22946,6 +22984,7 @@ MonoBehaviour:
   offset: 2
   blockUI: {fileID: 1835221134}
   placeAble: 1
+  blocks: {fileID: 1161827894}
 --- !u!114 &1835221137
 MonoBehaviour:
   m_ObjectHideFlags: 0

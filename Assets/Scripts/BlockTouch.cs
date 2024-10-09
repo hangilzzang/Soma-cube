@@ -19,6 +19,7 @@ public class BlockTouch : MonoBehaviour
     GameObject fieldBlock = null; // 필드에 실제로 배치되는 블록
     public RawImage blockUI; // 배치하면 ui 비활성화 이펙트 주기위함
     public bool placeAble;
+    public Transform blocks; // 필드에 배치된 블록들의 부모 게임 오브젝트
     void Start()
     {
         LeanTouch.OnFingerUpdate += HandleFingerUpdate;
@@ -161,7 +162,8 @@ public class BlockTouch : MonoBehaviour
 
                 // 배치된 블럭 딕셔너리에 위치 정보를 추가함
                 GameManager.Instance.AddParentObjectPositions(fieldBlock);
-                // Debug.Log(GameManager.Instance.positionSet);
+                // 배치된 블럭 blocks에 몰아넣기
+                fieldBlock.transform.parent = blocks;
 
                 // ui 비활성화 이펙트
                 blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
