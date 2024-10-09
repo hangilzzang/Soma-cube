@@ -2045,7 +2045,6 @@ GameObject:
   - component: {fileID: 139552938}
   - component: {fileID: 139552940}
   - component: {fileID: 139552939}
-  - component: {fileID: 139552941}
   - component: {fileID: 139552942}
   m_Layer: 6
   m_Name: CameraField
@@ -2128,20 +2127,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &139552941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 139552937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: 20
-  target: {x: 0, y: 0, z: 0}
 --- !u!114 &139552942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2155,7 +2140,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: 20
+  target: {x: 0, y: 0, z: 0}
   duration: 1
+  zoomSpeed: 10
+  maxOffset: 40
+  minOffset: 5
 --- !u!4 &146137302 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1390260392092281052, guid: 761a84262b5af1e469400d8afe3e6afb,
