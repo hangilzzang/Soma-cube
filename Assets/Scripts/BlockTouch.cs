@@ -139,7 +139,7 @@ public class BlockTouch : MonoBehaviour
             placeAble = true;
             return;
 
-        NotPlaceable: // 블럭 배치 불가능 판정
+            NotPlaceable: // 블럭 배치 불가능 판정
             placeAble = false; 
             fieldBlock.transform.position = new Vector3 (0, -5, 0);
             return;       
@@ -195,6 +195,7 @@ public class BlockTouch : MonoBehaviour
 
             placement = false;
             reposition = false;
+            GameManager.Instance.placementDraging = false;
         }
     }
 

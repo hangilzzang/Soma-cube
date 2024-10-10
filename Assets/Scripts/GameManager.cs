@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public bool reposition;
     public event Action OnBlockPlaced; // 블럭이 배치될때 실행되는 이벤트
     public Vector3 blocksCenter;
+    public bool placementDraging = false; // 배치/재배치 드래깅 중인가요? 그렇다면 필드블록 회전 불가
     
     public void TriggerOnBlockPlaced()
     {
@@ -109,7 +110,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    List<RaycastResult> GetUIRaycastResults(Vector2 pos)
+    public List<RaycastResult> GetUIRaycastResults(Vector2 pos)
     {
         // PointerEventData 생성
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
@@ -159,6 +160,7 @@ public class GameManager : MonoBehaviour
             if (heldUI1 == heldUI2 && heldUI1.tag == "BlockUI" && heldUI2.tag == "BlockUI") // 두 터치 모두 같은 블록 UI를 터치
             {
                 OnBlockUIOld?.Invoke(heldUI1, heldUI2);
+                placementDraging = true;
             }
         }
     }
@@ -183,6 +185,7 @@ public class GameManager : MonoBehaviour
             if (startBlock == endBlock && startBlock.CompareTag("Block"))
             {
                 OnBlockOld?.Invoke(startBlock, endBlock);
+                placementDraging = true; 
             }
         }
     }

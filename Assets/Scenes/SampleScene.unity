@@ -2141,10 +2141,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: 20
   target: {x: 0, y: 0, z: 0}
-  duration: 1
   zoomSpeed: 10
   maxOffset: 45
   minOffset: 4
+  rotationSpeed: 0.1
+  blocks: {fileID: 1161827894}
+  field: {fileID: 1861427175}
+  lotationAvailable: 0
+  blockV: {fileID: 1429883366}
+  blockL: {fileID: 1317321508}
+  blockT: {fileID: 1100328359}
+  blockZ: {fileID: 237881810}
+  blockA: {fileID: 1686457341}
+  blockB: {fileID: 1079949108}
+  blockP: {fileID: 1474519345}
 --- !u!4 &146137302 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1390260392092281052, guid: 761a84262b5af1e469400d8afe3e6afb,
@@ -6985,6 +6995,7 @@ MonoBehaviour:
   placement: 0
   reposition: 0
   blocksCenter: {x: 0, y: 0, z: 0}
+  placementDraging: 0
 --- !u!4 &514951106
 Transform:
   m_ObjectHideFlags: 0
