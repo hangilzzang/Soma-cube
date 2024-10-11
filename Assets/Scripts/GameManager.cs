@@ -15,14 +15,9 @@ public class GameManager : MonoBehaviour
     public event Action<Transform, Transform> OnBlockOld; // 블록UI 꾹터치 이벤트
     public bool placement;
     public bool reposition;
-    public event Action OnBlockPlaced; // 블럭이 배치될때 실행되는 이벤트
-    public Vector3 blocksCenter;
+    // public Vector3 blocksCenter;
     public bool placementDraging = false; // 배치/재배치 드래깅 중인가요? 그렇다면 필드블록 회전 불가
-    
-    public void TriggerOnBlockPlaced()
-    {
-        OnBlockPlaced?.Invoke();
-    }
+    public event Action<Vector2> OnFieldSwipe;
     
     void OnEnable()
     {
@@ -51,17 +46,20 @@ public class GameManager : MonoBehaviour
             // 이미 인스턴스가 존재하면 새로 생성된 오브젝트는 파괴
             Destroy(gameObject);
         }
+        Application.targetFrameRate = 120; // fps 60으로 설정
     }   
      // 부모 오브젝트의 자식들의 위치를 추가하는 함수
     public void AddParentObjectPositions(GameObject parentObject) 
     {
+        // 모든 블록 게임 오브젝트의 부모 오브젝트
+        Transform blocks = parentObject.transform.parent; 
         // 부모 오브젝트의 자식들의 위치를 저장할 리스트
         List<Vector3> childPositions = new List<Vector3>();
 
         // 모든 자식 오브젝트 순회
         foreach (Transform child in parentObject.transform)
         {
-            childPositions.Add(child.position); // 자식의 위치를 리스트에 추가
+            childPositions.Add(blocks.InverseTransformPoint(child.position)); // 자식의 위치를 리스트에 추가
         }
 
         // 딕셔너리에 부모 오브젝트와 그 자식들의 위치 리스트 추가
@@ -81,11 +79,14 @@ public class GameManager : MonoBehaviour
 
     public bool ArePositionsUnique(GameObject parentObject)
     {
+        // 모든 블록 게임 오브젝트의 부모 오브젝트
+        Transform blocks = parentObject.transform.parent; 
         // 부모 오브젝트의 자식들의 포지션을 리스트로 가져오기
         List<Vector3> childPositions = new List<Vector3>();
         foreach (Transform child in parentObject.transform)
         {
-            childPositions.Add(child.position);
+            // 블럭의 로컬좌표계(Blocks)를 기준으로한 위치 정보 리스트에 삽입
+            childPositions.Add(blocks.InverseTransformPoint(child.position));
         }
 
         // positionSet의 모든 값과 비교하여 겹치는지 확인
@@ -134,7 +135,7 @@ public class GameManager : MonoBehaviour
         // 레이케스트 결과
         List<RaycastResult> startResults = GetUIRaycastResults(startPos);
         
-        if (startResults.Count > 0) 
+        if (startResults.Count > 0)  // UI 스와이프 한경우
         {
             GameObject swipedUI = startResults[0].gameObject;
             if (swipedUI.tag == "BlockUI") // 만약 블록 UI 감지됐으면 블록스와이프 이벤트 발동
@@ -142,6 +143,11 @@ public class GameManager : MonoBehaviour
                 Vector2 swipeDelta = finger.SwipeScreenDelta;
                 OnBlockSwipe?.Invoke(swipedUI, swipeDelta);
             }
+        }
+        else // 아닌경우(필드 스와이프)
+        {
+            Vector2 swipeDelta = finger.SwipeScreenDelta;
+            OnFieldSwipe?.Invoke(swipeDelta);
         }
     }
 
@@ -190,45 +196,45 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GetCenterPoint()
-    {
-        // 만약 배치된 블럭이 없을경우
-        if (positionSet.Count == 0)
-        {
-            blocksCenter = Vector3.zero;
-        }
+    // public void GetCenterPoint()
+    // {
+    //     // 만약 배치된 블럭이 없을경우
+    //     if (positionSet.Count == 0)
+    //     {
+    //         blocksCenter = Vector3.zero;
+    //     }
 
-        // 매우 큰 초기값과 매우 작은 초기값 설정
-        float minX = float.MaxValue;
-        float minY = float.MaxValue;
-        float minZ = float.MaxValue;
+    //     // 매우 큰 초기값과 매우 작은 초기값 설정
+    //     float minX = float.MaxValue;
+    //     float minY = float.MaxValue;
+    //     float minZ = float.MaxValue;
 
-        float maxX = float.MinValue;
-        float maxY = float.MinValue;
-        float maxZ = float.MinValue;
+    //     float maxX = float.MinValue;
+    //     float maxY = float.MinValue;
+    //     float maxZ = float.MinValue;
 
-        // 딕셔너리의 모든 Vector3 값들을 순회하며 가장 작은 값과 가장 큰 값을 찾음
-        foreach (var key in positionSet)
-        {
-            foreach (var pos in key.Value)
-            {
-                // 각 축에 대해 가장 작은 값과 가장 큰 값 갱신
-                if (pos.x < minX) minX = pos.x;
-                if (pos.y < minY) minY = pos.y;
-                if (pos.z < minZ) minZ = pos.z;
+    //     // 딕셔너리의 모든 Vector3 값들을 순회하며 가장 작은 값과 가장 큰 값을 찾음
+    //     foreach (var key in positionSet)
+    //     {
+    //         foreach (var pos in key.Value)
+    //         {
+    //             // 각 축에 대해 가장 작은 값과 가장 큰 값 갱신
+    //             if (pos.x < minX) minX = pos.x;
+    //             if (pos.y < minY) minY = pos.y;
+    //             if (pos.z < minZ) minZ = pos.z;
 
-                if (pos.x > maxX) maxX = pos.x;
-                if (pos.y > maxY) maxY = pos.y;
-                if (pos.z > maxZ) maxZ = pos.z;
-            }
-        }
+    //             if (pos.x > maxX) maxX = pos.x;
+    //             if (pos.y > maxY) maxY = pos.y;
+    //             if (pos.z > maxZ) maxZ = pos.z;
+    //         }
+    //     }
 
-        // 중간 지점 계산
-        float centerX = (minX + maxX) / 2;
-        float centerY = (minY + maxY) / 2;
-        float centerZ = (minZ + maxZ) / 2;
+    //     // 중간 지점 계산
+    //     float centerX = (minX + maxX) / 2;
+    //     float centerY = (minY + maxY) / 2;
+    //     float centerZ = (minZ + maxZ) / 2;
 
-        // 필드값에 할당
-        blocksCenter = new Vector3(centerX, centerY, centerZ);
-    }
+    //     // 필드값에 할당
+    //     blocksCenter = new Vector3(centerX, centerY, centerZ);
+    // }
 }

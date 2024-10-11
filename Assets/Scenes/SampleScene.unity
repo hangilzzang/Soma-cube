@@ -2141,13 +2141,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: 20
   target: {x: 0, y: 0, z: 0}
-  zoomSpeed: 10
+  zoomSpeed: 50
   maxOffset: 45
   minOffset: 4
   rotationSpeed: 0.1
   blocks: {fileID: 1161827894}
   field: {fileID: 1861427175}
-  lotationAvailable: 0
   blockV: {fileID: 1429883366}
   blockL: {fileID: 1317321508}
   blockT: {fileID: 1100328359}
@@ -2155,6 +2154,7 @@ MonoBehaviour:
   blockA: {fileID: 1686457341}
   blockB: {fileID: 1079949108}
   blockP: {fileID: 1474519345}
+  rotateDuration: 0.5
 --- !u!4 &146137302 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1390260392092281052, guid: 761a84262b5af1e469400d8afe3e6afb,
@@ -3474,6 +3474,8 @@ MonoBehaviour:
   blockUI: {fileID: 246750534}
   placeAble: 1
   blocks: {fileID: 1161827894}
+  blockCamera: {fileID: 899736363}
+  testRenderTexture: {fileID: 0}
 --- !u!114 &246750537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4516,6 +4518,8 @@ MonoBehaviour:
   blockUI: {fileID: 297235885}
   placeAble: 1
   blocks: {fileID: 1161827894}
+  blockCamera: {fileID: 1884045194}
+  testRenderTexture: {fileID: 0}
 --- !u!114 &297235888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5946,6 +5950,8 @@ MonoBehaviour:
   blockUI: {fileID: 390486016}
   placeAble: 1
   blocks: {fileID: 1161827894}
+  blockCamera: {fileID: 2092500622}
+  testRenderTexture: {fileID: 8400000, guid: 2ccb825ce29f2a141a86f686337adb3b, type: 2}
 --- !u!114 &390486019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6994,7 +7000,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placement: 0
   reposition: 0
-  blocksCenter: {x: 0, y: 0, z: 0}
   placementDraging: 0
 --- !u!4 &514951106
 Transform:
@@ -10874,6 +10879,8 @@ MonoBehaviour:
   blockUI: {fileID: 834608015}
   placeAble: 1
   blocks: {fileID: 1161827894}
+  blockCamera: {fileID: 2019788264}
+  testRenderTexture: {fileID: 8400000, guid: 2ccb825ce29f2a141a86f686337adb3b, type: 2}
 --- !u!114 &834608018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13355,6 +13362,8 @@ MonoBehaviour:
   blockUI: {fileID: 1031170719}
   placeAble: 1
   blocks: {fileID: 1161827894}
+  blockCamera: {fileID: 625803281}
+  testRenderTexture: {fileID: 8400000, guid: 2ccb825ce29f2a141a86f686337adb3b, type: 2}
 --- !u!114 &1031170722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20367,6 +20376,8 @@ MonoBehaviour:
   blockUI: {fileID: 1643626240}
   placeAble: 1
   blocks: {fileID: 1161827894}
+  blockCamera: {fileID: 197516653}
+  testRenderTexture: {fileID: 0}
 --- !u!114 &1643626243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22996,6 +23007,8 @@ MonoBehaviour:
   blockUI: {fileID: 1835221134}
   placeAble: 1
   blocks: {fileID: 1161827894}
+  blockCamera: {fileID: 794584456}
+  testRenderTexture: {fileID: 8400000, guid: 2ccb825ce29f2a141a86f686337adb3b, type: 2}
 --- !u!114 &1835221137
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -127,6 +127,8 @@ public class BlockTouch : MonoBehaviour
             // 블럭의 포지션을 바꾼다(확정x)
             fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f); // 블럭 게임 오브젝트 포인터쪽으로 위치 변경
             
+            // 배치된 블럭 blocks에 몰아넣기
+            fieldBlock.transform.parent = blocks;
             // 겹치는 오브젝트가 있는지 확인
             if (GameManager.Instance.ArePositionsUnique(fieldBlock) == false) // 다른블럭과 겹쳐서 배치할수없는 경우
             {
@@ -162,8 +164,6 @@ public class BlockTouch : MonoBehaviour
 
                 // 배치된 블럭 딕셔너리에 위치 정보를 추가함
                 GameManager.Instance.AddParentObjectPositions(fieldBlock);
-                // 배치된 블럭 blocks에 몰아넣기
-                fieldBlock.transform.parent = blocks;
 
                 // ui 비활성화 이펙트
                 blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
@@ -190,8 +190,8 @@ public class BlockTouch : MonoBehaviour
             }
 
             // 필드 카메라 위치 조정
-            GameManager.Instance.GetCenterPoint(); // 배치된 블럭들의 중점 계산
-            GameManager.Instance.TriggerOnBlockPlaced(); // 이벤트 실행
+            // GameManager.Instance.GetCenterPoint(); // 배치된 블럭들의 중점 계산
+            // GameManager.Instance.TriggerOnBlockPlaced(); // 이벤트 실행
 
             placement = false;
             reposition = false;
