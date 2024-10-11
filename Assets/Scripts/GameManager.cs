@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
         foreach (Transform child in parentObject.transform)
         {
             childPositions.Add(blocks.InverseTransformPoint(child.position)); // 자식의 위치를 리스트에 추가
+            // Debug.Log(blocks.InverseTransformPoint(child.position)); // 테스트용
         }
 
         // 딕셔너리에 부모 오브젝트와 그 자식들의 위치 리스트 추가
@@ -79,6 +80,7 @@ public class GameManager : MonoBehaviour
 
     public bool ArePositionsUnique(GameObject parentObject)
     {
+        // Debug.Log("-----업데이트주기-----");
         // 모든 블록 게임 오브젝트의 부모 오브젝트
         Transform blocks = parentObject.transform.parent; 
         // 부모 오브젝트의 자식들의 포지션을 리스트로 가져오기
@@ -87,19 +89,25 @@ public class GameManager : MonoBehaviour
         {
             // 블럭의 로컬좌표계(Blocks)를 기준으로한 위치 정보 리스트에 삽입
             childPositions.Add(blocks.InverseTransformPoint(child.position));
+            // Debug.Log(blocks.InverseTransformPoint(child.position)); // 테스트용
         }
 
+        // Debug.Log("-----원래있던애 포지션-----");
         // positionSet의 모든 값과 비교하여 겹치는지 확인
         foreach (var entry in positionSet)
         {
             List<Vector3> storedPositions = entry.Value;
-
             // 자식 포지션 중 하나라도 겹치면 false 반환
             foreach (Vector3 storedPos in storedPositions)
             {
+                // Debug.Log(storedPos);
                 foreach (Vector3 childPos in childPositions)
                 {
-                    if (storedPos == childPos)
+                    // Debug.Log("--------");
+                    // Debug.Log("배치할 " + childPos);
+                    // Debug.Log("배치된 " + storedPos);
+                    // Debug.Log(storedPos == childPos);
+                    if (Vector3.Distance(storedPos, childPos) < 0.01f) // 변경함 이제 겹치는 부분에 대해 제대로 작동
                     {
                         return false; // 겹치는 포지션이 있으면 false
                     }
