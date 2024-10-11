@@ -17,9 +17,26 @@ public class BlockTouch : MonoBehaviour
     public bool reposition = false; // 재배치중
     public int offset = 2; //  프리팹 배치위치 조절 
     GameObject fieldBlock = null; // 필드에 실제로 배치되는 블록
-    public RawImage blockUI; // 배치하면 ui 비활성화 이펙트 주기위함
+    // public RawImage blockUI; // 배치하면 ui 비활성화 이펙트 주기위함 // 테스트
+    public Camera blockCamera; // 카메라 백그라운드 컬러 바꿔서 비활성화 이펙트 주기위함 
     public bool placeAble;
     public Transform blocks; // 필드에 배치된 블록들의 부모 게임 오브젝트
+    // public RenderTexture targetTexture;
+    
+    // void OnPreRender()
+    // {
+    //     if (targetTexture != null)
+    //     {
+    //         ClearRenderTexture(targetTexture);
+    //     }
+    // }
+    // void ClearRenderTexture(RenderTexture renderTexture)
+    // {
+    //     RenderTexture currentRT = RenderTexture.active; // 현재 활성화된 RenderTexture를 저장
+    //     RenderTexture.active = renderTexture; // 클리어할 RenderTexture를 활성화
+    //     GL.Clear(true, true, Color.clear); // 색상 버퍼와 깊이 버퍼를 클리어, Color.clear는 완전 투명색
+    //     RenderTexture.active = currentRT; // 원래의 RenderTexture를 다시 활성화
+    // }
     void Start()
     {
         LeanTouch.OnFingerUpdate += HandleFingerUpdate;
@@ -166,7 +183,10 @@ public class BlockTouch : MonoBehaviour
                 GameManager.Instance.AddParentObjectPositions(fieldBlock);
 
                 // ui 비활성화 이펙트
-                blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
+                blockCamera.backgroundColor = new Color(181f / 255f, 167f / 255f, 145f / 255f);
+                // blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
+                Canvas.ForceUpdateCanvases(); // 실험용
+
                 // 이벤트 구독 종료(스와이프 입력, 꾹터치 입력 못받음)
                 GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
                 GameManager.Instance.OnBlockUIOld -= HandleBlockUIOld;
@@ -182,7 +202,8 @@ public class BlockTouch : MonoBehaviour
                 if (reposition) // UI재활성화
                 {
                     // ui 활성화 이펙트
-                    blockUI.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
+                    blockCamera.backgroundColor = new Color(211f / 255f, 183f / 255f, 133f / 255f);
+                    // blockUI.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
                     // 이벤트 구독 시작(스와이프 입력, 꾹터치 입력 다시 받음)
                     GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
                     GameManager.Instance.OnBlockUIOld += HandleBlockUIOld;

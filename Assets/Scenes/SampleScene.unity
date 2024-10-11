@@ -3471,11 +3471,9 @@ MonoBehaviour:
   placement: 0
   reposition: 0
   offset: 2
-  blockUI: {fileID: 246750534}
+  blockCamera: {fileID: 899736363}
   placeAble: 1
   blocks: {fileID: 1161827894}
-  blockCamera: {fileID: 899736363}
-  testRenderTexture: {fileID: 0}
 --- !u!114 &246750537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4515,11 +4513,9 @@ MonoBehaviour:
   placement: 0
   reposition: 0
   offset: 2
-  blockUI: {fileID: 297235885}
+  blockCamera: {fileID: 1884045194}
   placeAble: 1
   blocks: {fileID: 1161827894}
-  blockCamera: {fileID: 1884045194}
-  testRenderTexture: {fileID: 0}
 --- !u!114 &297235888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5947,11 +5943,9 @@ MonoBehaviour:
   placement: 0
   reposition: 0
   offset: 2
-  blockUI: {fileID: 390486016}
+  blockCamera: {fileID: 2092500622}
   placeAble: 1
   blocks: {fileID: 1161827894}
-  blockCamera: {fileID: 2092500622}
-  testRenderTexture: {fileID: 8400000, guid: 2ccb825ce29f2a141a86f686337adb3b, type: 2}
 --- !u!114 &390486019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10876,11 +10870,9 @@ MonoBehaviour:
   placement: 0
   reposition: 0
   offset: 2
-  blockUI: {fileID: 834608015}
+  blockCamera: {fileID: 2019788264}
   placeAble: 1
   blocks: {fileID: 1161827894}
-  blockCamera: {fileID: 2019788264}
-  testRenderTexture: {fileID: 8400000, guid: 2ccb825ce29f2a141a86f686337adb3b, type: 2}
 --- !u!114 &834608018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13359,11 +13351,9 @@ MonoBehaviour:
   placement: 0
   reposition: 0
   offset: 2
-  blockUI: {fileID: 1031170719}
+  blockCamera: {fileID: 625803281}
   placeAble: 1
   blocks: {fileID: 1161827894}
-  blockCamera: {fileID: 625803281}
-  testRenderTexture: {fileID: 8400000, guid: 2ccb825ce29f2a141a86f686337adb3b, type: 2}
 --- !u!114 &1031170722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20373,11 +20363,9 @@ MonoBehaviour:
   placement: 0
   reposition: 0
   offset: 2
-  blockUI: {fileID: 1643626240}
+  blockCamera: {fileID: 197516653}
   placeAble: 1
   blocks: {fileID: 1161827894}
-  blockCamera: {fileID: 197516653}
-  testRenderTexture: {fileID: 0}
 --- !u!114 &1643626243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22680,7 +22668,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -23004,11 +22992,9 @@ MonoBehaviour:
   placement: 0
   reposition: 0
   offset: 2
-  blockUI: {fileID: 1835221134}
+  blockCamera: {fileID: 794584456}
   placeAble: 1
   blocks: {fileID: 1161827894}
-  blockCamera: {fileID: 794584456}
-  testRenderTexture: {fileID: 8400000, guid: 2ccb825ce29f2a141a86f686337adb3b, type: 2}
 --- !u!114 &1835221137
 MonoBehaviour:
   m_ObjectHideFlags: 0
