@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Lean.Touch;
 using DG.Tweening;
 using System;
+using System.Threading;
 
 public class BlockTouch : MonoBehaviour
 {
@@ -79,22 +80,84 @@ public class BlockTouch : MonoBehaviour
     {
         if (heldUI1 == gameObject && heldUI2 == gameObject) // 꾹터치 만족 조건
         {
+            // Debug.Log("---------");
             // 안보이는곳에 소환
             fieldBlock = Instantiate(blockPrefab, new Vector3 (0, -5, 0) ,blockTransform.rotation);
-            // offset값 찾기(특정좌표위에 올라가도록 블럭을 배치하고싶을경우 계산해야하는 offset값)
-            int lowestY = -5;
+            
+            // // offset값 찾기(특정좌표위에 올라가도록 블럭을 배치하고싶을경우 계산해야하는 offset값)
+            // int lowestY = -5;
+            // foreach (Transform child in fieldBlock.transform)
+            // {
+            //     if ((int)child.position.x == 0 && (int)child.position.z == 0)
+            //     {
+            //         if (child.position.y < lowestY)
+            //         {
+            //             lowestY = (int)child.position.y; // 갱신됨
+            //         }
+            //     }
+            // }
+            // // Debug.Log(lowestY);
+            // offset = (-5 - lowestY) + 2;
+
+            // fieldBlock 피봇 재조정 작업
+            // 1. 피봇이 되기에 적합한 블록찾기
+            // 1-1. fieldBlock에서 가장 낮은 y값을 가진 큐브 찾기
+            int lowestY = int.MaxValue;
             foreach (Transform child in fieldBlock.transform)
             {
-                if ((int)child.position.x == 0 && (int)child.position.z == 0)
+                if (child.position.y < lowestY)
                 {
-                    if (child.position.y < lowestY)
-                    {
-                        lowestY = (int)child.position.y; // 갱신됨
-                    }
+                    lowestY = (int)child.position.y; // == 연산자의 정확성을 위해 소수로 변환해줌
                 }
             }
-            // Debug.Log(lowestY);
-            offset = (-5 - lowestY) + 2;
+            // 1-2. lowestY를 기준으로 가장 아래층에 있는 큐브 따로 리스트에 담기
+            List<Transform> lowestCubes = new List<Transform>();
+            foreach (Transform child in fieldBlock.transform)
+            {
+                if ((int)child.position.y == lowestY)
+                {
+                    lowestCubes.Add(child);
+                }      
+            }
+
+            // // 실험용
+            // foreach (Transform cube in lowestCubes)
+            // {
+            //     Debug.Log(cube);
+            // }
+
+
+            // 1-3. 가장 아래층에 있는 큐브중 가장 위에 큐브가 많은 큐브 찾기
+            Transform pivotCube = null;
+            int maxCount = -1;
+            foreach (Transform cube in lowestCubes)
+            {
+                int countAbove = 0;
+                foreach (Transform compareCube in fieldBlock.transform)
+                {
+                    // 위에 블럭이 있을때마다 countAbove 1씩 증가 시키기
+                    if ((int)cube.position.x  == (int)compareCube.position.x 
+                        && (int)cube.position.z == (int)compareCube.position.z)
+                        {
+                            countAbove++;
+                        }
+                }
+                
+                if (countAbove > maxCount)
+                {
+                    maxCount = countAbove;
+                    pivotCube = cube; 
+                }
+            }
+            // Debug.Log(pivotCube);
+            // 2. 피봇큐브를 중심으로 포지션 재정렬
+            Vector3 diff = Vector3.zero - pivotCube.localPosition;
+            foreach (Transform child in fieldBlock.transform)
+            {
+                child.localPosition += diff;
+            }
+
+
             placement = true;
         }
     }
