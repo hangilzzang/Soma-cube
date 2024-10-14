@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     // public Vector3 blocksCenter;
     public bool placementDraging = false; // 배치/재배치 드래깅 중인가요? 그렇다면 필드블록 회전 불가
     public event Action<Vector2> OnFieldSwipe;
+    public bool swipeAble; // 줌과 스와이프가 동시에 실행되지않도록 조정하는 변수
     
     void OnEnable()
     {
@@ -154,8 +155,11 @@ public class GameManager : MonoBehaviour
         }
         else // 아닌경우(필드 스와이프)
         {
-            Vector2 swipeDelta = finger.SwipeScreenDelta;
-            OnFieldSwipe?.Invoke(swipeDelta);
+            if (swipeAble)
+            {
+                Vector2 swipeDelta = finger.SwipeScreenDelta;
+                OnFieldSwipe?.Invoke(swipeDelta);
+            }
         }
     }
 

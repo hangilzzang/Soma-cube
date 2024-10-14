@@ -49,11 +49,23 @@ public class MainCamera : MonoBehaviour
 
     }
 
+     // 레이트 업데이트 사용으로 줌동작이후 손가락이 모두 떨어진뒤 스와이프 이벤트가 발동할때 swipeable = false 상태를 유지할수있다
+    void LateUpdate()
+    {
+        // 현재 터치 중인 손가락이 없다면 swipeAble
+        if (LeanTouch.Fingers.Count == 0)
+        {
+            GameManager.Instance.swipeAble = true;
+        }
+    }
+
     void HandleGesture(List<LeanFinger> fingers)
     {
         // 손가락이 두개이상 일때만 실행
         if (fingers.Count >= 2)
         {
+            // 현재 줌잉중인 손가락이 모두 떨어질때까지 swipe이벤트 팝업을 막는다
+            GameManager.Instance.swipeAble = false;
             // 두 손가락의 핀치 스케일을 계산
             float pinchScale = LeanGesture.GetPinchScale(fingers);
             if (pinchScale != 1.0f)
