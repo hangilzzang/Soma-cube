@@ -66,67 +66,47 @@ public class MainCamera : MonoBehaviour
         {
             // 현재 줌잉중인 손가락이 모두 떨어질때까지 swipe이벤트 팝업을 막는다
             GameManager.Instance.swipeAble = false;
-            // 두 손가락의 핀치 스케일을 계산
-            float pinchScale = LeanGesture.GetPinchScale(fingers);
-            if (pinchScale != 1.0f)
+            if (GameManager.Instance.dragingIndex == -1) // 드래깅중에는 줌잉 불가
             {
-                // 줌 오프셋 계산
-                float zoomOffset = -(pinchScale - 1.0f) * zoomSpeed;
-                // 줌오프셋이 적용된 새로운 포지션 계산
-                Vector3 newPosition = transform.position + new Vector3(zoomOffset, zoomOffset, zoomOffset);
-                // 새로운 포지션과 원래 타겟과의 거리 계산
-                float diff = (newPosition - target).x;
-                
-                if (diff < minOffset) // 만약 최저 offset보다 더 가깝다면 최저 offset만큼만 떨어지도록 함
+                // 필드 영역에서만 줌잉이 가능하도록 수정
+                foreach (LeanFinger finger in fingers)
                 {
-                    transform.position = target + new Vector3(minOffset, minOffset, minOffset);
-                    // offset = minOffset;
+                    if (finger.StartedOverGui == true)
+                    {
+                        return;
+                    }
                 }
-                else if (diff > maxOffset) // 최대 offset보다 더 멀다면 최대 offset만큼만 떨어지도록함
+
+                // 두 손가락의 핀치 스케일을 계산
+                float pinchScale = LeanGesture.GetPinchScale(fingers);
+                if (pinchScale != 1.0f)
                 {
-                    transform.position = target + new Vector3(maxOffset, maxOffset, maxOffset);
-                    // offset = maxOffset;
-                }
-                else
-                {
-                    transform.position = newPosition;
-                    // offset += zoomOffset;
+                    // 줌 오프셋 계산
+                    float zoomOffset = -(pinchScale - 1.0f) * zoomSpeed;
+                    // 줌오프셋이 적용된 새로운 포지션 계산
+                    Vector3 newPosition = transform.position + new Vector3(zoomOffset, zoomOffset, zoomOffset);
+                    // 새로운 포지션과 원래 타겟과의 거리 계산
+                    float diff = (newPosition - target).x;
+                    
+                    if (diff < minOffset) // 만약 최저 offset보다 더 가깝다면 최저 offset만큼만 떨어지도록 함
+                    {
+                        transform.position = target + new Vector3(minOffset, minOffset, minOffset);
+                        // offset = minOffset;
+                    }
+                    else if (diff > maxOffset) // 최대 offset보다 더 멀다면 최대 offset만큼만 떨어지도록함
+                    {
+                        transform.position = target + new Vector3(maxOffset, maxOffset, maxOffset);
+                        // offset = maxOffset;
+                    }
+                    else
+                    {
+                        transform.position = newPosition;
+                        // offset += zoomOffset;
+                    }
                 }
             }
         }
     }
-
-    // void HandleFingerUpdate(LeanFinger finger)
-    // {
-    //     if (!GameManager.Instance.placementDraging && lotationAvailable) // 블럭배치용 드래깅중이 아니라면
-    //     {
-    //         float rotationAmount = finger.ScaledDelta.x * -rotationSpeed;
-    //         blocks.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //         field.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //         blockV.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //         blockL.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //         blockT.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //         blockZ.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //         blockA.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //         blockB.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //         blockP.RotateAround(Vector3.zero, Vector3.up, rotationAmount);
-    //     }
-    // }
-
-    // void HandleFingerDown(LeanFinger finger)
-    // {
-    //     Vector2 startPos = finger.StartScreenPosition;
-    //     List<RaycastResult> startResults = GameManager.Instance.GetUIRaycastResults(startPos);
-    //     if (startResults.Count == 0) // 터치했을때 ui 없다면
-    //     {
-    //         lotationAvailable = true; 
-    //     }
-    // }
-
-    // void HandleFingerUp(LeanFinger finger)
-    // {
-    //     lotationAvailable = false; 
-    // }
 
     void HandleFieldSwipe(Vector2 swipeDelta)
     {

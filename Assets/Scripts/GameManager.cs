@@ -16,9 +16,9 @@ public class GameManager : MonoBehaviour
     public bool placement;
     public bool reposition;
     // public Vector3 blocksCenter;
-    public bool placementDraging = false; // 배치/재배치 드래깅 중인가요? 그렇다면 필드블록 회전 불가
     public event Action<Vector2> OnFieldSwipe;
     public bool swipeAble; // 줌과 스와이프가 동시에 실행되지않도록 조정하는 변수
+    public int dragingIndex = -1;
     
     void OnEnable()
     {
@@ -144,21 +144,23 @@ public class GameManager : MonoBehaviour
         // 레이케스트 결과
         List<RaycastResult> startResults = GetUIRaycastResults(startPos);
         
-        if (startResults.Count > 0)  // UI 스와이프 한경우
+        if (swipeAble) // 오직 한손가락 스와이프만 허용
         {
-            GameObject swipedUI = startResults[0].gameObject;
-            if (swipedUI.tag == "BlockUI") // 만약 블록 UI 감지됐으면 블록스와이프 이벤트 발동
+            if (startResults.Count > 0)  // UI 스와이프 한경우
             {
-                Vector2 swipeDelta = finger.SwipeScreenDelta;
-                OnBlockSwipe?.Invoke(swipedUI, swipeDelta);
+                GameObject swipedUI = startResults[0].gameObject;
+                if (swipedUI.tag == "BlockUI") // 만약 블록 UI 감지됐으면 블록스와이프 이벤트 발동
+                {
+                    Vector2 swipeDelta = finger.SwipeScreenDelta;
+                    OnBlockSwipe?.Invoke(swipedUI, swipeDelta);
+                }
             }
-        }
-        else // 아닌경우(필드 스와이프)
-        {
-            if (swipeAble)
+            else // 아닌경우(필드 스와이프)
             {
+
                 Vector2 swipeDelta = finger.SwipeScreenDelta;
                 OnFieldSwipe?.Invoke(swipeDelta);
+
             }
         }
     }
@@ -177,8 +179,11 @@ public class GameManager : MonoBehaviour
             GameObject heldUI2 = endResults[0].gameObject;
             if (heldUI1 == heldUI2 && heldUI1.tag == "BlockUI" && heldUI2.tag == "BlockUI") // 두 터치 모두 같은 블록 UI를 터치
             {
-                OnBlockUIOld?.Invoke(heldUI1, heldUI2);
-                placementDraging = true;
+                if (dragingIndex == -1) // 배치동작은 중복해서 실행할수없음
+                {
+                    dragingIndex = finger.Index;
+                    OnBlockUIOld?.Invoke(heldUI1, heldUI2);
+                }
             }
         }
     }
@@ -202,51 +207,12 @@ public class GameManager : MonoBehaviour
             // 동일한 블록을 가르키는지 확인,  태그 확인
             if (startBlock == endBlock && startBlock.CompareTag("Block"))
             {
-                OnBlockOld?.Invoke(startBlock, endBlock);
-                placementDraging = true; 
+                if (dragingIndex == -1) // 배치동작은 중복해서 실행할수없음
+                {
+                    dragingIndex = finger.Index;
+                    OnBlockOld?.Invoke(startBlock, endBlock);
+                }
             }
         }
     }
-
-    // public void GetCenterPoint()
-    // {
-    //     // 만약 배치된 블럭이 없을경우
-    //     if (positionSet.Count == 0)
-    //     {
-    //         blocksCenter = Vector3.zero;
-    //     }
-
-    //     // 매우 큰 초기값과 매우 작은 초기값 설정
-    //     float minX = float.MaxValue;
-    //     float minY = float.MaxValue;
-    //     float minZ = float.MaxValue;
-
-    //     float maxX = float.MinValue;
-    //     float maxY = float.MinValue;
-    //     float maxZ = float.MinValue;
-
-    //     // 딕셔너리의 모든 Vector3 값들을 순회하며 가장 작은 값과 가장 큰 값을 찾음
-    //     foreach (var key in positionSet)
-    //     {
-    //         foreach (var pos in key.Value)
-    //         {
-    //             // 각 축에 대해 가장 작은 값과 가장 큰 값 갱신
-    //             if (pos.x < minX) minX = pos.x;
-    //             if (pos.y < minY) minY = pos.y;
-    //             if (pos.z < minZ) minZ = pos.z;
-
-    //             if (pos.x > maxX) maxX = pos.x;
-    //             if (pos.y > maxY) maxY = pos.y;
-    //             if (pos.z > maxZ) maxZ = pos.z;
-    //         }
-    //     }
-
-    //     // 중간 지점 계산
-    //     float centerX = (minX + maxX) / 2;
-    //     float centerY = (minY + maxY) / 2;
-    //     float centerZ = (minZ + maxZ) / 2;
-
-    //     // 필드값에 할당
-    //     blocksCenter = new Vector3(centerX, centerY, centerZ);
-    // }
 }

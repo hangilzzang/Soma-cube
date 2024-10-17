@@ -22,22 +22,7 @@ public class BlockTouch : MonoBehaviour
     public Camera blockCamera; // 카메라 백그라운드 컬러 바꿔서 비활성화 이펙트 주기위함 
     public bool placeAble;
     public Transform blocks; // 필드에 배치된 블록들의 부모 게임 오브젝트
-    // public RenderTexture targetTexture;
     
-    // void OnPreRender()
-    // {
-    //     if (targetTexture != null)
-    //     {
-    //         ClearRenderTexture(targetTexture);
-    //     }
-    // }
-    // void ClearRenderTexture(RenderTexture renderTexture)
-    // {
-    //     RenderTexture currentRT = RenderTexture.active; // 현재 활성화된 RenderTexture를 저장
-    //     RenderTexture.active = renderTexture; // 클리어할 RenderTexture를 활성화
-    //     GL.Clear(true, true, Color.clear); // 색상 버퍼와 깊이 버퍼를 클리어, Color.clear는 완전 투명색
-    //     RenderTexture.active = currentRT; // 원래의 RenderTexture를 다시 활성화
-    // }
     void Start()
     {
         LeanTouch.OnFingerUpdate += HandleFingerUpdate;
@@ -80,34 +65,17 @@ public class BlockTouch : MonoBehaviour
     {
         if (heldUI1 == gameObject && heldUI2 == gameObject) // 꾹터치 만족 조건
         {
-            // Debug.Log("---------");
             // 안보이는곳에 소환
             fieldBlock = Instantiate(blockPrefab, new Vector3 (0, -5, 0) ,blockTransform.rotation);
-            
-            // // offset값 찾기(특정좌표위에 올라가도록 블럭을 배치하고싶을경우 계산해야하는 offset값)
-            // int lowestY = -5;
-            // foreach (Transform child in fieldBlock.transform)
-            // {
-            //     if ((int)child.position.x == 0 && (int)child.position.z == 0)
-            //     {
-            //         if (child.position.y < lowestY)
-            //         {
-            //             lowestY = (int)child.position.y; // 갱신됨
-            //         }
-            //     }
-            // }
-            // // Debug.Log(lowestY);
-            // offset = (-5 - lowestY) + 2;
 
-            // fieldBlock 피봇 재조정 작업
             // 1. 피봇이 되기에 적합한 블록찾기
-            // 1-1. fieldBlock에서 가장 낮은 y값을 가진 큐브 찾기
+            // 1-1. fieldBlock에서 가장 낮은 y값을 구하기
             int lowestY = int.MaxValue;
             foreach (Transform child in fieldBlock.transform)
             {
                 if (child.position.y < lowestY)
                 {
-                    lowestY = (int)child.position.y; // == 연산자의 정확성을 위해 소수로 변환해줌
+                    lowestY = (int)child.position.y; // == 연산자의 정확성을 위해 정수로 변환해줌
                 }
             }
             // 1-2. lowestY를 기준으로 가장 아래층에 있는 큐브 따로 리스트에 담기
@@ -119,12 +87,6 @@ public class BlockTouch : MonoBehaviour
                     lowestCubes.Add(child);
                 }      
             }
-
-            // // 실험용
-            // foreach (Transform cube in lowestCubes)
-            // {
-            //     Debug.Log(cube);
-            // }
 
 
             // 1-3. 가장 아래층에 있는 큐브중 가장 위에 큐브가 많은 큐브 찾기
@@ -183,103 +145,108 @@ public class BlockTouch : MonoBehaviour
     // 블럭의 이동
     void HandleFingerUpdate(LeanFinger finger)
     {
-        if (placement || reposition)
+        if (finger.Index == GameManager.Instance.dragingIndex) // 꾹터치 손가락을 대상으로만 드래깅
         {
-            // 게임 오브젝트 감지
-            Vector2 pos = finger.ScreenPosition;
-            Ray ray = Camera.main.ScreenPointToRay(pos);
-            RaycastHit hit; 
-            if (!(Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "BlockCube")) // 블럭 게임오브젝트를 감지하지못함
+            if (placement || reposition)
             {
-                goto NotPlaceable;
+                // 게임 오브젝트 감지
+                Vector2 pos = finger.ScreenPosition;
+                Ray ray = Camera.main.ScreenPointToRay(pos);
+                RaycastHit hit; 
+                if (!(Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "BlockCube")) // 블럭 게임오브젝트를 감지하지못함
+                {
+                    goto NotPlaceable;
+                }
+                
+                GameObject touchedObject = hit.transform.gameObject; // 현재 터치중인 게임오브젝트 
+
+                // Debug.Log("다른거임");
+                // ui 오브젝트 감지
+                List<RaycastResult> results = GetUIRaycastResults(pos);
+                if (results.Count > 0) // ui오브젝트가 존재함
+                {
+                    goto NotPlaceable;
+                }
+
+                // 블럭의 포지션을 바꾼다(확정x)
+                fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f); // 블럭 게임 오브젝트 포인터쪽으로 위치 변경
+                
+                // 배치된 블럭 blocks에 몰아넣기
+                fieldBlock.transform.parent = blocks;
+                // 겹치는 오브젝트가 있는지 확인
+                if (GameManager.Instance.ArePositionsUnique(fieldBlock) == false) // 다른블럭과 겹쳐서 배치할수없는 경우
+                {
+                    // Debug.Log("배치할수없어요");
+                    goto NotPlaceable;
+                }
+
+                // 블럭 배치 가능 판정
+                // Debug.Log("배치 가능합니다");
+                placeAble = true;
+                return;
+
+                NotPlaceable: // 블럭 배치 불가능 판정
+                placeAble = false; 
+                fieldBlock.transform.position = new Vector3 (0, -5, 0);
+                return;       
             }
-            
-            GameObject touchedObject = hit.transform.gameObject; // 현재 터치중인 게임오브젝트 
-
-            // Debug.Log("다른거임");
-            // ui 오브젝트 감지
-            List<RaycastResult> results = GetUIRaycastResults(pos);
-            if (results.Count > 0) // ui오브젝트가 존재함
-            {
-                goto NotPlaceable;
-            }
-
-            // 블럭의 포지션을 바꾼다(확정x)
-            fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f); // 블럭 게임 오브젝트 포인터쪽으로 위치 변경
-            
-            // 배치된 블럭 blocks에 몰아넣기
-            fieldBlock.transform.parent = blocks;
-            // 겹치는 오브젝트가 있는지 확인
-            if (GameManager.Instance.ArePositionsUnique(fieldBlock) == false) // 다른블럭과 겹쳐서 배치할수없는 경우
-            {
-                // Debug.Log("배치할수없어요");
-                goto NotPlaceable;
-            }
-
-            // 블럭 배치 가능 판정
-            // Debug.Log("배치 가능합니다");
-            placeAble = true;
-            return;
-
-            NotPlaceable: // 블럭 배치 불가능 판정
-            placeAble = false; 
-            fieldBlock.transform.position = new Vector3 (0, -5, 0);
-            return;       
-
         }
     }
 
 
     void HandleFingerUp(LeanFinger finger)
     {
-        if (placement || reposition)
+        if (finger.Index == GameManager.Instance.dragingIndex) // 기존에 드래깅하던 손가락에만 반응한다
         {
-            if (placeAble) // 배치가능
+            if (placement || reposition)
             {
-                // 블럭의 자식 큐브 콜라이더 활성화
-                foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
+                if (placeAble) // 배치가능
                 {
-                    childCollider.enabled = true; 
+                    // 블럭의 자식 큐브 콜라이더 활성화
+                    foreach (Collider childCollider in fieldBlock.GetComponentsInChildren<Collider>())
+                    {
+                        childCollider.enabled = true; 
+                    }
+
+                    // 배치된 블럭 딕셔너리에 위치 정보를 추가함
+                    GameManager.Instance.AddParentObjectPositions(fieldBlock);
+
+                    // ui 비활성화 이펙트
+                    blockCamera.backgroundColor = new Color(181f / 255f, 167f / 255f, 145f / 255f);
+                    // blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
+                    Canvas.ForceUpdateCanvases(); // 실험용
+
+                    // 이벤트 구독 종료(스와이프 입력, 꾹터치 입력 못받음)
+                    GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
+                    GameManager.Instance.OnBlockUIOld -= HandleBlockUIOld;
+                }
+                else // 제거
+                {
+                    // 배치된 블럭 딕셔너리에서 위치 정보를 제거함
+                    GameManager.Instance.RemoveParentObjectPositions(fieldBlock);
+                    
+                    Destroy(fieldBlock); // 기존 프리팹 파괴
+                    fieldBlock = null;
+    
+                    if (reposition) // UI재활성화
+                    {
+                        // ui 활성화 이펙트
+                        blockCamera.backgroundColor = new Color(211f / 255f, 183f / 255f, 133f / 255f);
+                        // blockUI.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
+                        // 이벤트 구독 시작(스와이프 입력, 꾹터치 입력 다시 받음)
+                        GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
+                        GameManager.Instance.OnBlockUIOld += HandleBlockUIOld;
+                    }
                 }
 
-                // 배치된 블럭 딕셔너리에 위치 정보를 추가함
-                GameManager.Instance.AddParentObjectPositions(fieldBlock);
+                // 필드 카메라 위치 조정
+                // GameManager.Instance.GetCenterPoint(); // 배치된 블럭들의 중점 계산
+                // GameManager.Instance.TriggerOnBlockPlaced(); // 이벤트 실행
 
-                // ui 비활성화 이펙트
-                blockCamera.backgroundColor = new Color(181f / 255f, 167f / 255f, 145f / 255f);
-                // blockUI.color = new Color(200f / 255f, 200f / 255f, 200f / 255f, 128f / 255f);
-                Canvas.ForceUpdateCanvases(); // 실험용
-
-                // 이벤트 구독 종료(스와이프 입력, 꾹터치 입력 못받음)
-                GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
-                GameManager.Instance.OnBlockUIOld -= HandleBlockUIOld;
+                placement = false;
+                reposition = false;
+                GameManager.Instance.dragingIndex = -1; // 다시 초기값 설정
             }
-            else // 제거
-            {
-                // 배치된 블럭 딕셔너리에서 위치 정보를 제거함
-                GameManager.Instance.RemoveParentObjectPositions(fieldBlock);
-                
-                Destroy(fieldBlock); // 기존 프리팹 파괴
-                fieldBlock = null;
- 
-                if (reposition) // UI재활성화
-                {
-                    // ui 활성화 이펙트
-                    blockCamera.backgroundColor = new Color(211f / 255f, 183f / 255f, 133f / 255f);
-                    // blockUI.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
-                    // 이벤트 구독 시작(스와이프 입력, 꾹터치 입력 다시 받음)
-                    GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
-                    GameManager.Instance.OnBlockUIOld += HandleBlockUIOld;
-                }
-            }
-
-            // 필드 카메라 위치 조정
-            // GameManager.Instance.GetCenterPoint(); // 배치된 블럭들의 중점 계산
-            // GameManager.Instance.TriggerOnBlockPlaced(); // 이벤트 실행
-
-            placement = false;
-            reposition = false;
-            GameManager.Instance.placementDraging = false;
         }
     }
 
