@@ -240,8 +240,8 @@ public class BlockTouch : MonoBehaviour
                 }
 
                 // 필드 카메라 위치 조정
-                // GameManager.Instance.GetCenterPoint(); // 배치된 블럭들의 중점 계산
-                // GameManager.Instance.TriggerOnBlockPlaced(); // 이벤트 실행
+                GameManager.Instance.GetNewCameraTarget(); // 배치된 블럭들의 위치를 바탕으로 새로운 카메라 위치 계산
+                GameManager.Instance.TriggerOnBlockPlaced(); // 이벤트 실행
 
                 placement = false;
                 reposition = false;

@@ -39,6 +39,8 @@ public class MainCamera : MonoBehaviour
         LeanTouch.OnGesture += HandleGesture; // 손가락 하나이상터치시 매프레임마다 터치중인 손가락정보 리스트로 가져옴
         // 필드 회전 구현용 이벤트
         GameManager.Instance.OnFieldSwipe += HandleFieldSwipe; // 필드 스와이프 이벤트 발생시 호출
+        // 블록배치 이벤트 구독
+        GameManager.Instance.OnBlockPlaced += HandleBlockPlaced; 
 
     }
 
@@ -46,7 +48,20 @@ public class MainCamera : MonoBehaviour
     {
         LeanTouch.OnGesture -= HandleGesture;
         GameManager.Instance.OnFieldSwipe -= HandleFieldSwipe;
+        GameManager.Instance.OnBlockPlaced -= HandleBlockPlaced; 
 
+    }
+
+    void HandleBlockPlaced()
+    {
+        // 새로운 타겟 불러오기
+        Vector3 newTarget = GameManager.Instance.CameraTarget;
+        // 월드좌표계로 변환
+        Vector3 worldPosition = blocks.TransformPoint(newTarget);
+        // offset을 바탕으로 새 포지션 계산하기
+        Vector3 newPosition = new Vector3(worldPosition.x + offset, worldPosition.y + offset, worldPosition.z + offset);
+        // 이동
+        transform.DOMove(newPosition, rotateDuration).SetEase(Ease.InOutQuad); 
     }
 
      // 레이트 업데이트 사용으로 줌동작이후 손가락이 모두 떨어진뒤 스와이프 이벤트가 발동할때 swipeable = false 상태를 유지할수있다

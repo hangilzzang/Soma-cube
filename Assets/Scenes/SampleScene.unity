@@ -6994,7 +6994,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placement: 0
   reposition: 0
-  placementDraging: 0
+  swipeAble: 0
+  dragingIndex: -1
+  CameraTarget: {x: 0, y: 0, z: 0}
 --- !u!4 &514951106
 Transform:
   m_ObjectHideFlags: 0

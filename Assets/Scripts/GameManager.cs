@@ -19,6 +19,12 @@ public class GameManager : MonoBehaviour
     public event Action<Vector2> OnFieldSwipe;
     public bool swipeAble; // 줌과 스와이프가 동시에 실행되지않도록 조정하는 변수
     public int dragingIndex = -1;
+    public event Action OnBlockPlaced; // 블럭이 배치될때 실행되는 이벤트
+    public Vector3 CameraTarget;
+    public void TriggerOnBlockPlaced()
+    {
+        OnBlockPlaced?.Invoke();
+    }
     
     void OnEnable()
     {
@@ -214,5 +220,47 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void GetNewCameraTarget() // 필드카메라가 찍을 지점
+    {
+        // 만약 배치된 블럭이 없을경우
+        if (positionSet.Count == 0)
+        {
+            CameraTarget = Vector3.zero;
+            return;
+        }
+
+        // 매우 큰 초기값과 매우 작은 초기값 설정
+        float minX = float.MaxValue;
+        float minY = float.MaxValue;
+        float minZ = float.MaxValue;
+
+        float maxX = float.MinValue;
+        float maxY = float.MinValue;
+        float maxZ = float.MinValue;
+
+        // 딕셔너리의 모든 Vector3 값들을 순회하며 가장 작은 값과 가장 큰 값을 찾음
+        foreach (var key in positionSet)
+        {
+            foreach (var pos in key.Value)
+            {
+                // 각 축에 대해 가장 작은 값과 가장 큰 값 갱신
+                if (pos.x < minX) minX = pos.x;
+                if (pos.y < minY) minY = pos.y;
+                if (pos.z < minZ) minZ = pos.z;
+
+                if (pos.x > maxX) maxX = pos.x;
+                if (pos.y > maxY) maxY = pos.y;
+                if (pos.z > maxZ) maxZ = pos.z;
+            }
+        }
+
+        // 중간 지점 계산
+        float centerX = (minX + maxX) / 2;
+        float centerZ = (minZ + maxZ) / 2;
+
+        // 필드값에 할당
+        CameraTarget = new Vector3(centerX, maxY, centerZ);
     }
 }
