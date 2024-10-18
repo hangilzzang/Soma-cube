@@ -66,45 +66,6 @@ public class MainCamera : MonoBehaviour
         {
             // 현재 줌잉중인 손가락이 모두 떨어질때까지 swipe이벤트 팝업을 막는다
             GameManager.Instance.swipeAble = false;
-            if (GameManager.Instance.dragingIndex == -1) // 드래깅중에는 줌잉 불가
-            {
-                // 필드 영역에서만 줌잉이 가능하도록 수정
-                foreach (LeanFinger finger in fingers)
-                {
-                    if (finger.StartedOverGui == true)
-                    {
-                        return;
-                    }
-                }
-
-                // 두 손가락의 핀치 스케일을 계산
-                float pinchScale = LeanGesture.GetPinchScale(fingers);
-                if (pinchScale != 1.0f)
-                {
-                    // 줌 오프셋 계산
-                    float zoomOffset = -(pinchScale - 1.0f) * zoomSpeed;
-                    // 줌오프셋이 적용된 새로운 포지션 계산
-                    Vector3 newPosition = transform.position + new Vector3(zoomOffset, zoomOffset, zoomOffset);
-                    // 새로운 포지션과 원래 타겟과의 거리 계산
-                    float diff = (newPosition - target).x;
-                    
-                    if (diff < minOffset) // 만약 최저 offset보다 더 가깝다면 최저 offset만큼만 떨어지도록 함
-                    {
-                        transform.position = target + new Vector3(minOffset, minOffset, minOffset);
-                        // offset = minOffset;
-                    }
-                    else if (diff > maxOffset) // 최대 offset보다 더 멀다면 최대 offset만큼만 떨어지도록함
-                    {
-                        transform.position = target + new Vector3(maxOffset, maxOffset, maxOffset);
-                        // offset = maxOffset;
-                    }
-                    else
-                    {
-                        transform.position = newPosition;
-                        // offset += zoomOffset;
-                    }
-                }
-            }
         }
     }
 
