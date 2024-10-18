@@ -71,7 +71,16 @@ public class MainCamera : MonoBehaviour
 
     void HandleFieldSwipe(Vector2 swipeDelta)
     {
-        if (!DOTween.IsTweening(field)) // 회전중이 아닐경우
+        // 핸드블록 및 필드가 회전중이 아니라면
+        if (!DOTween.IsTweening(blocks)
+            && !DOTween.IsTweening(field)
+            && !DOTween.IsTweening(blockV)
+            && !DOTween.IsTweening(blockL)
+            && !DOTween.IsTweening(blockT)
+            && !DOTween.IsTweening(blockZ)
+            && !DOTween.IsTweening(blockA)
+            && !DOTween.IsTweening(blockB)
+            && !DOTween.IsTweening(blockP)) 
         {
             if (swipeDelta.x > 0)
             {
