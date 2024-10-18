@@ -11,10 +11,10 @@ public class MainCamera : MonoBehaviour
     public float offset = 20;
     public Vector3 target;
     // public float duration = 1f;
-    public float zoomSpeed = 1f;
-    public float maxOffset = 40;
-    public float minOffset = 5;
-    public float rotationSpeed = 0.01f;
+    public float zoomSpeed = 50f;
+    public float maxOffset = 45;
+    public float minOffset = 4;
+    public float rotationSpeed = 0.1f;
     public Transform blocks;
     public Transform field;
     // public bool lotationAvailable = false; // 회전동작이 가능한지 여부 판별
@@ -27,12 +27,16 @@ public class MainCamera : MonoBehaviour
     public Transform blockB;
     public Transform blockP;
     public float rotateDuration = 0.5f; // 회전 애니메이션 지속 시간
+    public Vector3 newTarget; // 카메라 타겟(월드좌표)
+    public Transform CameraRotator;
 
 
     void Start()
     {
-        // 카메라의 위치를 Vector3.zero에서 offset만큼 떨어진 위치로 설정
-        transform.position = target + new Vector3(offset, offset, offset);
+        // 타겟을 기준으로 카메라 로테이터 위치 설정
+        CameraRotator.position = target + new Vector3(0f, offset, 0f);
+        // 카메라 로테이터를 기준으로 카메라 위치설정
+        transform.position = CameraRotator.position + new Vector3(offset, 0f, offset);
         // 카메라가 항상 (0, 0, 0)을 바라보도록 설정
         transform.LookAt(target);
         // 줌인/줌아웃 구현용 이벤트 구독
@@ -54,14 +58,12 @@ public class MainCamera : MonoBehaviour
 
     void HandleBlockPlaced()
     {
-        // 새로운 타겟 불러오기
-        Vector3 newTarget = GameManager.Instance.CameraTarget;
-        // 월드좌표계로 변환
-        Vector3 worldPosition = blocks.TransformPoint(newTarget);
+        // 새로운 타겟 월드좌표계로 변환
+        newTarget = blocks.TransformPoint(GameManager.Instance.CameraTarget);
         // offset을 바탕으로 새 포지션 계산하기
-        Vector3 newPosition = new Vector3(worldPosition.x + offset, worldPosition.y + offset, worldPosition.z + offset);
-        // 이동
-        transform.DOMove(newPosition, rotateDuration).SetEase(Ease.InOutQuad); 
+        Vector3 newPosition = newTarget + new Vector3(0f, offset, 0f);
+        // 카메라 로테이터 이동(카메라는 로테이터의 자식이라 카메라도 이동됨)
+        CameraRotator.DOMove(newPosition, rotateDuration).SetEase(Ease.InOutQuad); 
     }
 
      // 레이트 업데이트 사용으로 줌동작이후 손가락이 모두 떨어진뒤 스와이프 이벤트가 발동할때 swipeable = false 상태를 유지할수있다
@@ -86,10 +88,8 @@ public class MainCamera : MonoBehaviour
 
     void HandleFieldSwipe(Vector2 swipeDelta)
     {
-        // 핸드블록 및 필드가 회전중이 아니라면
-        if (!DOTween.IsTweening(blocks)
-            && !DOTween.IsTweening(field)
-            && !DOTween.IsTweening(blockV)
+        // 핸드블록이 회전중이 아니라면
+        if (!DOTween.IsTweening(blockV)
             && !DOTween.IsTweening(blockL)
             && !DOTween.IsTweening(blockT)
             && !DOTween.IsTweening(blockZ)
@@ -101,6 +101,7 @@ public class MainCamera : MonoBehaviour
             {
                 blocks.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 field.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                
                 blockV.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 blockL.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 blockT.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
@@ -113,6 +114,7 @@ public class MainCamera : MonoBehaviour
             {
                 blocks.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 field.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                
                 blockV.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 blockL.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 blockT.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
