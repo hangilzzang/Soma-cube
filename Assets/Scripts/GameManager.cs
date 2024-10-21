@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public int dragingIndex = -1;
     public event Action OnBlockPlaced; // 블럭이 배치될때 실행되는 이벤트
     public Vector3 CameraTarget;
+    public int fieldRotateAngle = 0;
+    
     public void TriggerOnBlockPlaced()
     {
         OnBlockPlaced?.Invoke();

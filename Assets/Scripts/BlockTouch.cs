@@ -22,6 +22,8 @@ public class BlockTouch : MonoBehaviour
     public Camera blockCamera; // 카메라 백그라운드 컬러 바꿔서 비활성화 이펙트 주기위함 
     public bool placeAble;
     public Transform blocks; // 필드에 배치된 블록들의 부모 게임 오브젝트
+    public Transform blockRotation; // 필드에 배치되는 프리팹의 회전정보를 저장한다
+
     
     void Start()
     {
@@ -66,7 +68,7 @@ public class BlockTouch : MonoBehaviour
         if (heldUI1 == gameObject && heldUI2 == gameObject) // 꾹터치 만족 조건
         {
             // 안보이는곳에 소환
-            fieldBlock = Instantiate(blockPrefab, new Vector3 (0, -5, 0) ,blockTransform.rotation);
+            fieldBlock = Instantiate(blockPrefab, new Vector3 (0, -5, 0) ,blockRotation.rotation); // 회전정보는 핸드블록의 rotation을 이용하지않음
 
             // 1. 피봇이 되기에 적합한 블록찾기
             // 1-1. fieldBlock에서 가장 낮은 y값을 구하기
@@ -259,11 +261,15 @@ public class BlockTouch : MonoBehaviour
             {
                 if (swipeDelta.x > 0)
                 {
+                    // blockRotation.eulerAngles += new Vector3(0, -90, 0);
                     blockTransform.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                    blockRotation.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 }
                 else
                 {
+                    // blockRotation.eulerAngles += new Vector3(0, 90, 0);
                     blockTransform.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                    blockRotation.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
                 }
             }
             else
@@ -271,21 +277,51 @@ public class BlockTouch : MonoBehaviour
                 // x축, z축
                 if (swipeDelta.x > 0 && swipeDelta.y > 0)
                 {
+                    // blockRotation.eulerAngles += new Vector3(0, 0, 90);
                     blockTransform.DORotate(new Vector3(0, 0, 90), rotateDuration, RotateMode.WorldAxisAdd);
+                    blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(0, 0, 90)), rotateDuration, RotateMode.WorldAxisAdd);
                 }
                 else if (swipeDelta.x < 0 && swipeDelta.y > 0)
                 {
+                    // blockRotation.eulerAngles += new Vector3(-90, 0, 0);
                     blockTransform.DORotate(new Vector3(-90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                    blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(-90, 0, 0)), rotateDuration, RotateMode.WorldAxisAdd);
                 }
                 else if (swipeDelta.x < 0 && swipeDelta.y < 0)
                 {
+                    // blockRotation.eulerAngles += new Vector3(0, 0, -90);
                     blockTransform.DORotate(new Vector3(0, 0, -90), rotateDuration, RotateMode.WorldAxisAdd);
+                    blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(0, 0, -90)), rotateDuration, RotateMode.WorldAxisAdd);
                 }
                 else if (swipeDelta.x > 0 && swipeDelta.y < 0)
                 {
+                    // blockRotation.eulerAngles += new Vector3(90, 0, 0);
                     blockTransform.DORotate(new Vector3(90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                    blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(90, 0, 0)), rotateDuration, RotateMode.WorldAxisAdd);
                 }
             }
         }
     }
+
+    // 실제 블럭이 배치되는 회전상태와 핸들 블록의 현재 회전상태에는 차이가 있다 그것을 보정해주는 메서드
+    Vector3 GetBlockSwipeAngle(Vector3 vector3)
+    {
+        if (GameManager.Instance.fieldRotateAngle == 0) 
+        {
+            return vector3;
+        }
+        else if (GameManager.Instance.fieldRotateAngle == 90) 
+        {
+            return new Vector3(vector3.z, vector3.y, -vector3.x);
+        }
+        else if (GameManager.Instance.fieldRotateAngle == 180)
+        {
+            return new Vector3(-vector3.x, vector3.y, -vector3.z);
+        }
+        else
+        {
+            return new Vector3(-vector3.z, vector3.y, vector3.x);
+        }
+    }
+
 }

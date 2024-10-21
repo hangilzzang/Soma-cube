@@ -99,30 +99,49 @@ public class MainCamera : MonoBehaviour
         {
             if (swipeDelta.x > 0)
             {
-                blocks.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                field.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                
-                blockV.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockL.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockT.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockZ.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockA.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockB.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockP.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                GameManager.Instance.fieldRotateAngle = (GameManager.Instance.fieldRotateAngle + 90 + 360) % 360; // 현재 필드각도 조절
+                // Debug.Log(GameManager.Instance.fieldRotateAngle);
+
+                Sequence sequence = DOTween.Sequence();
+
+                // 카메라 회전 및 타겟 바라보기
+                sequence.Join(CameraRotator.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                // sequence.Join(transform.DOLookAt(newTarget, rotateDuration));
+
+                // 블록들 회전
+                sequence.Join(blockV.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockL.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockT.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockZ.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockA.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockB.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockP.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+
+                // 시퀀스 실행
+                sequence.Play();
             }
             else
             {
-                blocks.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                field.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                
-                blockV.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockL.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockT.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockZ.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockA.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockB.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                blockP.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                
+                GameManager.Instance.fieldRotateAngle = (GameManager.Instance.fieldRotateAngle - 90 + 360) % 360; // 현재 필드각도 조절
+                // Debug.Log(GameManager.Instance.fieldRotateAngle);
+
+                Sequence sequence = DOTween.Sequence();
+
+                // 카메라 회전 및 타겟 바라보기
+                sequence.Join(CameraRotator.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                // sequence.Join(transform.DOLookAt(newTarget, rotateDuration));
+
+                // 블록들 회전
+                sequence.Join(blockV.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockL.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockT.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockZ.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockA.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockB.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                sequence.Join(blockP.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+
+                // 시퀀스 실행
+                sequence.Play();
             }
         }
     }
