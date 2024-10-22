@@ -89,13 +89,7 @@ public class MainCamera : MonoBehaviour
     void HandleFieldSwipe(Vector2 swipeDelta)
     {
         // 핸드블록이 회전중이 아니라면
-        if (!DOTween.IsTweening(blockV)
-            && !DOTween.IsTweening(blockL)
-            && !DOTween.IsTweening(blockT)
-            && !DOTween.IsTweening(blockZ)
-            && !DOTween.IsTweening(blockA)
-            && !DOTween.IsTweening(blockB)
-            && !DOTween.IsTweening(blockP)) 
+        if (!GameManager.Instance.isBlockTweening) 
         {
             if (swipeDelta.x > 0)
             {
@@ -103,7 +97,7 @@ public class MainCamera : MonoBehaviour
                 // Debug.Log(GameManager.Instance.fieldRotateAngle);
 
                 Sequence sequence = DOTween.Sequence();
-
+                sequence.OnStart(() => GameManager.Instance.isBlockTweening = true); // 회전 시작!
                 // 카메라 회전 및 타겟 바라보기
                 sequence.Join(CameraRotator.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
                 // sequence.Join(transform.DOLookAt(newTarget, rotateDuration));
@@ -118,6 +112,7 @@ public class MainCamera : MonoBehaviour
                 sequence.Join(blockP.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
 
                 // 시퀀스 실행
+                sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false); // 회전 끝
                 sequence.Play();
             }
             else
@@ -126,7 +121,7 @@ public class MainCamera : MonoBehaviour
                 // Debug.Log(GameManager.Instance.fieldRotateAngle);
 
                 Sequence sequence = DOTween.Sequence();
-
+                sequence.OnStart(() => GameManager.Instance.isBlockTweening = true); 
                 // 카메라 회전 및 타겟 바라보기
                 sequence.Join(CameraRotator.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
                 // sequence.Join(transform.DOLookAt(newTarget, rotateDuration));
@@ -141,6 +136,7 @@ public class MainCamera : MonoBehaviour
                 sequence.Join(blockP.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
 
                 // 시퀀스 실행
+                sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false);
                 sequence.Play();
             }
         }

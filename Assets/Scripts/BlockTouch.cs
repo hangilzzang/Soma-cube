@@ -254,22 +254,28 @@ public class BlockTouch : MonoBehaviour
 
     void HandleBlockSwipe(GameObject swipedUI, Vector2 swipeDelta) // 블록스와이프 이벤트 핸들러
     {
-        if (swipedUI == gameObject && !DOTween.IsTweening(blockTransform))
+        if (swipedUI == gameObject && !GameManager.Instance.isBlockTweening)
         {
             // y축
             if (Mathf.Abs(swipeDelta.x) > leftRightThreshold * Mathf.Abs(swipeDelta.y))
             {
                 if (swipeDelta.x > 0)
                 {
-                    // blockRotation.eulerAngles += new Vector3(0, -90, 0);
-                    blockTransform.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                    blockRotation.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                    Sequence sequence = DOTween.Sequence();
+                    sequence.OnStart(() => GameManager.Instance.isBlockTweening = true); // 회전 시작!
+                    sequence.Join(blockTransform.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.Join(blockRotation.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false); // 회전 끝
+                    sequence.Play();
                 }
                 else
                 {
-                    // blockRotation.eulerAngles += new Vector3(0, 90, 0);
-                    blockTransform.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                    blockRotation.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd);
+                    Sequence sequence = DOTween.Sequence();
+                    sequence.OnStart(() => GameManager.Instance.isBlockTweening = true);
+                    sequence.Join(blockTransform.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.Join(blockRotation.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false);
+                    sequence.Play();
                 }
             }
             else
@@ -277,27 +283,39 @@ public class BlockTouch : MonoBehaviour
                 // x축, z축
                 if (swipeDelta.x > 0 && swipeDelta.y > 0)
                 {
-                    // blockRotation.eulerAngles += new Vector3(0, 0, 90);
-                    blockTransform.DORotate(new Vector3(0, 0, 90), rotateDuration, RotateMode.WorldAxisAdd);
-                    blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(0, 0, 90)), rotateDuration, RotateMode.WorldAxisAdd);
+                    Sequence sequence = DOTween.Sequence();
+                    sequence.OnStart(() => GameManager.Instance.isBlockTweening = true);
+                    sequence.Join(blockTransform.DORotate(new Vector3(0, 0, 90), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.Join(blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(0, 0, 90)), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false);
+                    sequence.Play();
                 }
                 else if (swipeDelta.x < 0 && swipeDelta.y > 0)
                 {
-                    // blockRotation.eulerAngles += new Vector3(-90, 0, 0);
-                    blockTransform.DORotate(new Vector3(-90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                    blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(-90, 0, 0)), rotateDuration, RotateMode.WorldAxisAdd);
+                    Sequence sequence = DOTween.Sequence();
+                    sequence.OnStart(() => GameManager.Instance.isBlockTweening = true);
+                    sequence.Join(blockTransform.DORotate(new Vector3(-90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.Join(blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(-90, 0, 0)), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false);
+                    sequence.Play();
                 }
                 else if (swipeDelta.x < 0 && swipeDelta.y < 0)
                 {
-                    // blockRotation.eulerAngles += new Vector3(0, 0, -90);
-                    blockTransform.DORotate(new Vector3(0, 0, -90), rotateDuration, RotateMode.WorldAxisAdd);
-                    blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(0, 0, -90)), rotateDuration, RotateMode.WorldAxisAdd);
+                    Sequence sequence = DOTween.Sequence();
+                    sequence.OnStart(() => GameManager.Instance.isBlockTweening = true);
+                    sequence.Join(blockTransform.DORotate(new Vector3(0, 0, -90), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.Join(blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(0, 0, -90)), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false);
+                    sequence.Play();
                 }
                 else if (swipeDelta.x > 0 && swipeDelta.y < 0)
                 {
-                    // blockRotation.eulerAngles += new Vector3(90, 0, 0);
-                    blockTransform.DORotate(new Vector3(90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd);
-                    blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(90, 0, 0)), rotateDuration, RotateMode.WorldAxisAdd);
+                    Sequence sequence = DOTween.Sequence();
+                    sequence.OnStart(() => GameManager.Instance.isBlockTweening = true);
+                    sequence.Join(blockTransform.DORotate(new Vector3(90, 0, 0), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.Join(blockRotation.DORotate(GetBlockSwipeAngle(new Vector3(90, 0, 0)), rotateDuration, RotateMode.WorldAxisAdd));
+                    sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false);
+                    sequence.Play();
                 }
             }
         }

@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public event Action OnBlockPlaced; // 블럭이 배치될때 실행되는 이벤트
     public Vector3 CameraTarget;
     public int fieldRotateAngle = 0;
+    public bool isBlockTweening = false; // 핸드블록중 하나라도 회전중이면 true
     
     public void TriggerOnBlockPlaced()
     {
