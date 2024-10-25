@@ -2139,7 +2139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d22d246bac38494d8a3509bcfc293b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 20
+  offset: 25
   target: {x: 0, y: 0, z: 0}
   zoomSpeed: 50
   maxOffset: 45
@@ -7033,6 +7033,8 @@ MonoBehaviour:
   swipeAble: 0
   dragingIndex: -1
   CameraTarget: {x: 0, y: 0, z: 0}
+  fieldRotateAngle: 0
+  isBlockTweening: 0
 --- !u!4 &514951106
 Transform:
   m_ObjectHideFlags: 0
