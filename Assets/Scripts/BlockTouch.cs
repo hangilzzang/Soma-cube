@@ -155,7 +155,8 @@ public class BlockTouch : MonoBehaviour
                 Vector2 pos = finger.ScreenPosition;
                 Ray ray = Camera.main.ScreenPointToRay(pos);
                 RaycastHit hit; 
-                if (!(Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "BlockCube")) // 블럭 게임오브젝트를 감지하지못함
+                // 블럭큐브 게임오브젝트를 감지하지못함, 블럭큐브는 필드와 배치된 블럭 전체를 구성하는 각각의 큐브를 말함
+                if (!(Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "BlockCube")) 
                 {
                     goto NotPlaceable;
                 }
@@ -221,6 +222,8 @@ public class BlockTouch : MonoBehaviour
                     // 이벤트 구독 종료(스와이프 입력, 꾹터치 입력 못받음)
                     GameManager.Instance.OnBlockSwipe -= HandleBlockSwipe;
                     GameManager.Instance.OnBlockUIOld -= HandleBlockUIOld;
+                    // 태그를 바꿈으로서 해당 ui가 비활성화되었음을 알림(GameManager.HandleFingerOld1의 dragingIndex변경을 막기위함)
+                    gameObject.tag = "DisabledBlockUI";
                 }
                 else // 제거
                 {
@@ -238,6 +241,7 @@ public class BlockTouch : MonoBehaviour
                         // 이벤트 구독 시작(스와이프 입력, 꾹터치 입력 다시 받음)
                         GameManager.Instance.OnBlockSwipe += HandleBlockSwipe;
                         GameManager.Instance.OnBlockUIOld += HandleBlockUIOld;
+                        gameObject.tag = "BlockUI";
                     }
                 }
 

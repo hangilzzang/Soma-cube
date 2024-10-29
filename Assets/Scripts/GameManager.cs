@@ -211,6 +211,7 @@ public class GameManager : MonoBehaviour
         // 레이케스트 결과: 모두 게임오브젝트에 충돌
         if (Physics.Raycast(rayStart, out hitStart) && Physics.Raycast(rayEnd, out hitEnd)) 
         {
+            // 다른 "블록큐브"를 터치하더라도 같은 부모(블록)이면 ok
             Transform startBlock = hitStart.transform.parent;
             Transform endBlock = hitEnd.transform.parent;
             // 동일한 블록을 가르키는지 확인,  태그 확인
