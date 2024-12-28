@@ -26,6 +26,8 @@ public class MainCamera : MonoBehaviour
     public Transform blockA;
     public Transform blockB;
     public Transform blockP;
+    // 회전시킬 빛
+    public Transform fieldLight;
     public float rotateDuration = 0.5f; // 회전 애니메이션 지속 시간
     public Vector3 newTarget; // 카메라 타겟(월드좌표)
     public Transform CameraRotator;
@@ -111,6 +113,9 @@ public class MainCamera : MonoBehaviour
                 sequence.Join(blockB.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
                 sequence.Join(blockP.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
 
+                // 빛도 회전
+                sequence.Join(fieldLight.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+
                 // 시퀀스 실행
                 sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false); // 회전 끝
                 sequence.Play();
@@ -134,6 +139,9 @@ public class MainCamera : MonoBehaviour
                 sequence.Join(blockA.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
                 sequence.Join(blockB.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
                 sequence.Join(blockP.DORotate(new Vector3(0, 90, 0), rotateDuration, RotateMode.WorldAxisAdd));
+
+                // 빛도 회전
+                sequence.Join(fieldLight.DORotate(new Vector3(0, -90, 0), rotateDuration, RotateMode.WorldAxisAdd));
 
                 // 시퀀스 실행
                 sequence.OnComplete(() => GameManager.Instance.isBlockTweening = false);
