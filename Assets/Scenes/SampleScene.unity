@@ -96,7 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 756a449ee6a82ba4f8fd3ed11ed97860,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -1848,7 +1849,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2086,7 +2087,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -3061,8 +3062,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 6
-  target: {x: 0, y: 0, z: 0}
 --- !u!20 &197516653
 Camera:
   m_ObjectHideFlags: 0
@@ -7311,7 +7310,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -8246,8 +8245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 6
-  target: {x: 0, y: 0, z: 0}
 --- !u!1001 &635634642
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9169,7 +9166,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -10191,8 +10188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 6
-  target: {x: 0, y: 0, z: 0}
 --- !u!20 &794584456
 Camera:
   m_ObjectHideFlags: 0
@@ -11801,8 +11796,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 6
-  target: {x: 0, y: 0, z: 0}
 --- !u!20 &899736363
 Camera:
   m_ObjectHideFlags: 0
@@ -13689,7 +13682,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -16685,7 +16678,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -17282,7 +17275,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -20945,7 +20938,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -23396,7 +23389,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.35
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -24575,8 +24568,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 6
-  target: {x: 0, y: 0, z: 0}
 --- !u!20 &1884045194
 Camera:
   m_ObjectHideFlags: 0
@@ -26407,8 +26398,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 6
-  target: {x: 0, y: 0, z: 0}
 --- !u!20 &2019788264
 Camera:
   m_ObjectHideFlags: 0
@@ -27085,8 +27074,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ad26230d5eabce4987a0ed9f9bb10b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: 6
-  target: {x: 0, y: 0, z: 0}
 --- !u!20 &2092500622
 Camera:
   m_ObjectHideFlags: 0

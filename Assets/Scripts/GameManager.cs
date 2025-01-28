@@ -128,8 +128,17 @@ public class GameManager : MonoBehaviour
         // 겹치는 포지션이 없다면 true 반환
         return true;
     }
+    
+    // 터치지점에 게임오브젝트가 있으면 게임오브젝트 반환 아니면 null
+    public GameObject GetGameObjectRaycastResult(Vector2 pos)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(pos);
+        RaycastHit hit; 
+        return Physics.Raycast(ray, out hit) ? hit.transform.gameObject : null;
+    }
 
-    public List<RaycastResult> GetUIRaycastResults(Vector2 pos)
+    // 터치지점에 UI가 있으면 게임오브젝트 반환 아니면 null
+    public GameObject GetUIRaycastResult(Vector2 pos)
     {
         // PointerEventData 생성
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
@@ -143,33 +152,30 @@ public class GameManager : MonoBehaviour
         // Raycast 수행
         EventSystem.current.RaycastAll(pointerData, results);
 
-        // Raycast 결과 반환
-        return results;
+        // 가장 앞쪽 UI 게임오브젝트만 반환 (없으면 null)
+        return results.Count > 0 ? results[0].gameObject : null;
     }
 
     void HandleFingerSwipe(LeanFinger finger) // 스와이프 이벤트 핸들러
     {
         Vector2 startPos = finger.StartScreenPosition;
         // 레이케스트 결과
-        List<RaycastResult> startResults = GetUIRaycastResults(startPos);
+        GameObject startResult = GetUIRaycastResult(startPos);
         
         if (swipeAble) // 오직 한손가락 스와이프만 허용
         {
-            if (startResults.Count > 0)  // UI 스와이프 한경우
+            if (startResult != null)  // UI 스와이프 한경우
             {
-                GameObject swipedUI = startResults[0].gameObject;
-                if (swipedUI.tag == "BlockUI") // 만약 블록 UI 감지됐으면 블록스와이프 이벤트 발동
+                if (startResult.tag == "BlockUI") // 만약 블록 UI 감지됐으면 블록스와이프 이벤트 발동
                 {
                     Vector2 swipeDelta = finger.SwipeScreenDelta;
-                    OnBlockSwipe?.Invoke(swipedUI, swipeDelta);
+                    OnBlockSwipe?.Invoke(startResult, swipeDelta);
                 }
             }
             else // 아닌경우(필드 스와이프)
             {
-
                 Vector2 swipeDelta = finger.SwipeScreenDelta;
                 OnFieldSwipe?.Invoke(swipeDelta);
-
             }
         }
     }
@@ -179,14 +185,12 @@ public class GameManager : MonoBehaviour
         Vector2 startPos = finger.StartScreenPosition;
         Vector2 EndPos = finger.LastScreenPosition;
 
-        List<RaycastResult> startResults = GetUIRaycastResults(startPos);
-        List<RaycastResult> endResults = GetUIRaycastResults(EndPos);
+        GameObject heldUI1 = GetUIRaycastResult(startPos);
+        GameObject heldUI2 = GetUIRaycastResult(EndPos);
         
-        if (startResults.Count > 0 && endResults.Count > 0) // 
+        if (heldUI1 != null && heldUI2 != null)
         {
-            GameObject heldUI1 = startResults[0].gameObject;
-            GameObject heldUI2 = endResults[0].gameObject;
-            if (heldUI1 == heldUI2 && heldUI1.tag == "BlockUI" && heldUI2.tag == "BlockUI") // 두 터치 모두 같은 블록 UI를 터치
+            if (heldUI1 == heldUI2 && heldUI1.tag == "BlockUI") // 두 터치 모두 같은 블록 UI를 터치
             {
                 if (dragingIndex == -1) // 배치동작은 중복해서 실행할수없음
                 {
@@ -265,6 +269,6 @@ public class GameManager : MonoBehaviour
         float centerZ = (minZ + maxZ) / 2;
 
         // 필드값에 할당
-        CameraTarget = new Vector3(centerX, maxY, centerZ);
+        CameraTarget = new Vector3(centerX, maxY + 1, centerZ);
     }
 }

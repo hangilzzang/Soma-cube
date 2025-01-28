@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 
 public class MainCamera : MonoBehaviour
 {
-    public float offset = 22;
+    public float offset = 25;
     public Vector3 target;
     // public float duration = 1f;
     public float zoomSpeed = 50f;

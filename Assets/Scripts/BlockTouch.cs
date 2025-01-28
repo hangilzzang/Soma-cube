@@ -44,24 +44,6 @@ public class BlockTouch : MonoBehaviour
     }
 
     
-    List<RaycastResult> GetUIRaycastResults(Vector2 startPos)
-    {
-        // PointerEventData 생성
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
-        {
-            position = startPos
-        };
-
-        // Raycast 결과를 저장할 리스트
-        var results = new List<RaycastResult>();
-
-        // Raycast 수행
-        EventSystem.current.RaycastAll(pointerData, results);
-
-        // Raycast 결과 반환
-        return results;
-    }
-    
     // UI 꾹터치 반응함(배치)
     void HandleBlockUIOld(GameObject heldUI1, GameObject heldUI2)
     {
@@ -153,26 +135,26 @@ public class BlockTouch : MonoBehaviour
             {
                 // 게임 오브젝트 감지
                 Vector2 pos = finger.ScreenPosition;
-                Ray ray = Camera.main.ScreenPointToRay(pos);
-                RaycastHit hit; 
+
+                GameObject gameObjectRaycastResult = GameManager.Instance.GetGameObjectRaycastResult(pos);
+
+
                 // 블럭큐브 게임오브젝트를 감지하지못함, 블럭큐브는 필드와 배치된 블럭 전체를 구성하는 각각의 큐브를 말함
-                if (!(Physics.Raycast(ray, out hit) && hit.transform.gameObject.tag == "BlockCube")) 
+                if (!(gameObjectRaycastResult != null && gameObjectRaycastResult.tag == "BlockCube")) 
                 {
                     goto NotPlaceable;
                 }
-                
-                GameObject touchedObject = hit.transform.gameObject; // 현재 터치중인 게임오브젝트 
 
                 // Debug.Log("다른거임");
                 // ui 오브젝트 감지
-                List<RaycastResult> results = GetUIRaycastResults(pos);
-                if (results.Count > 0) // ui오브젝트가 존재함
+                GameObject result = GameManager.Instance.GetUIRaycastResult(pos);
+                if (result != null) // ui오브젝트가 존재함
                 {
                     goto NotPlaceable;
                 }
 
                 // 블럭의 포지션을 바꾼다(확정x)
-                fieldBlock.transform.position = touchedObject.transform.position + new Vector3(0f, offset, 0f); // 블럭 게임 오브젝트 포인터쪽으로 위치 변경
+                fieldBlock.transform.position = gameObjectRaycastResult.transform.position + new Vector3(0f, offset, 0f); // 블럭 게임 오브젝트 포인터쪽으로 위치 변경
                 
                 // 배치된 블럭 blocks에 몰아넣기
                 fieldBlock.transform.parent = blocks;
