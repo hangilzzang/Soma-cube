@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public Vector3 CameraTarget;
     public int fieldRotateAngle = 0;
     public bool isBlockTweening = false; // 핸드블록중 하나라도 회전중이면 true
+    public GameObject MainUI; // MainUI 게임오브젝트 참조 추가
     
     public void TriggerOnBlockPlaced()
     {
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
     
     void OnEnable()
     {
+        LeanTouch.OnFingerTap += HandleFingerTap; // 탭 이벤트 핸들러 추가
         LeanTouch.OnFingerSwipe += HandleFingerSwipe;
         LeanTouch.OnFingerOld += HandleFingerOld1;
         LeanTouch.OnFingerOld += HandleFingerOld2; 
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     void OnDisable()
     {
+        LeanTouch.OnFingerTap -= HandleFingerTap; // 탭 이벤트 핸들러 제거
         LeanTouch.OnFingerSwipe -= HandleFingerSwipe;
         LeanTouch.OnFingerOld -= HandleFingerOld1;
         LeanTouch.OnFingerOld -= HandleFingerOld2; 
@@ -226,6 +229,31 @@ public class GameManager : MonoBehaviour
                     dragingIndex = finger.Index;
                     OnBlockOld?.Invoke(startBlock, endBlock);
                 }
+            }
+        }
+    }
+
+    void HandleFingerTap(LeanFinger finger)
+    {
+        // 터치 시작과 끝 위치 가져오기
+        Vector2 startPos = finger.StartScreenPosition;
+        Vector2 endPos = finger.LastScreenPosition;
+        
+        // 두 위치 모두에서 게임오브젝트와 UI 레이캐스트 체크
+        GameObject startGameObj = GetGameObjectRaycastResult(startPos);
+        GameObject startUI = GetUIRaycastResult(startPos);
+        GameObject endGameObj = GetGameObjectRaycastResult(endPos);
+        GameObject endUI = GetUIRaycastResult(endPos);
+        
+        // 모든 결과가 null이면 (빈 공간 터치) 이벤트 발동
+        if (startGameObj == null && startUI == null && 
+            endGameObj == null && endUI == null)
+        {
+            // MainUI가 할당되어 있는지 확인
+            if (MainUI != null)
+            {
+                // MainUI의 활성화 상태를 토글
+                MainUI.SetActive(!MainUI.activeSelf);
             }
         }
     }
