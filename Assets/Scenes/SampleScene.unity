@@ -5441,7 +5441,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 337311133}
         m_TargetAssemblyTypeName: MapUI, Assembly-CSharp
-        m_MethodName: MapUIImageChanger
+        m_MethodName: HandleMapUITouch
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5466,6 +5466,7 @@ MonoBehaviour:
   mapUIImage: {fileID: 337311130}
   puzzleSprite: {fileID: 21300000, guid: cce5fc05558fbe24d83775a1311e4db4, type: 3}
   mapSprite: {fileID: 21300000, guid: ac67730a06a396f42872957909adc392, type: 3}
+  blocks: {fileID: 1161827894}
 --- !u!1001 &337438892
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7333,6 +7334,7 @@ MonoBehaviour:
   CameraTarget: {x: 0, y: 0, z: 0}
   fieldRotateAngle: 0
   isBlockTweening: 0
+  isMapUIToggled: 0
   MainUI: {fileID: 1674470037}
 --- !u!4 &514951106
 Transform:
@@ -11860,7 +11862,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

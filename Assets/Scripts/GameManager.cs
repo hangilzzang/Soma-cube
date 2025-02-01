@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public Vector3 CameraTarget;
     public int fieldRotateAngle = 0;
     public bool isBlockTweening = false; // 핸드블록중 하나라도 회전중이면 true
+    public bool isMapUIToggled = false; // MapUI 토글 상태를 저장하는 변수
     public GameObject MainUI; // MainUI 게임오브젝트 참조 추가
     
     public void TriggerOnBlockPlaced()
