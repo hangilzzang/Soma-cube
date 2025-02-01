@@ -216,8 +216,11 @@ public class GameManager : MonoBehaviour
         Ray rayEnd = Camera.main.ScreenPointToRay(EndPos);
         RaycastHit hitEnd; 
 
+        // HiddenBlocks 레이어를 제외한 레이어마스크 설정
+        int layerMask = ~(1 << LayerMask.NameToLayer("HiddenBlocks"));
+
         // 레이케스트 결과: 모두 게임오브젝트에 충돌
-        if (Physics.Raycast(rayStart, out hitStart) && Physics.Raycast(rayEnd, out hitEnd)) 
+        if (Physics.Raycast(rayStart, out hitStart, Mathf.Infinity, layerMask) && Physics.Raycast(rayEnd, out hitEnd, Mathf.Infinity, layerMask)) 
         {
             // 다른 "블록큐브"를 터치하더라도 같은 부모(블록)이면 ok
             Transform startBlock = hitStart.transform.parent;
