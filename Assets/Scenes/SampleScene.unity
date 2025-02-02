@@ -7308,6 +7308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 514951106}
   - component: {fileID: 514951105}
+  - component: {fileID: 514951107}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -7351,6 +7352,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &514951107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514951104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ef0af3071aff149b68e92051c2c68e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LevelName: {fileID: 889807572}
 --- !u!1001 &516478731
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11881,7 +11895,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Level Name
+  m_Text: Cube
 --- !u!222 &889807573
 CanvasRenderer:
   m_ObjectHideFlags: 0
