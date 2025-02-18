@@ -262,10 +262,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GetNewCameraTarget() // 필드카메라가 찍을 지점
+    // positionSet을 allCubePositions 형식으로 변환하는 메서드
+    public List<int[]> ConvertPositionSetToCubePositions()
+    {
+        List<int[]> cubePositions = new List<int[]>();
+        
+        foreach (var positions in positionSet.Values)
+        {
+            foreach (Vector3 pos in positions)
+            {
+                cubePositions.Add(new int[] {
+                    Mathf.RoundToInt(pos.x),
+                    Mathf.RoundToInt(pos.y),
+                    Mathf.RoundToInt(pos.z)
+                });
+            }
+        }
+        
+        return cubePositions;
+    }
+
+    public void GetNewCameraTarget(List<int[]> cubePositions) 
     {
         // 만약 배치된 블럭이 없을경우
-        if (positionSet.Count == 0)
+        if (cubePositions.Count == 0)
         {
             CameraTarget = Vector3.zero;
             return;
@@ -280,20 +300,17 @@ public class GameManager : MonoBehaviour
         float maxY = float.MinValue;
         float maxZ = float.MinValue;
 
-        // 딕셔너리의 모든 Vector3 값들을 순회하며 가장 작은 값과 가장 큰 값을 찾음
-        foreach (var key in positionSet)
+        // 모든 큐브 위치를 순회하며 가장 작은 값과 가장 큰 값을 찾음
+        foreach (var pos in cubePositions)
         {
-            foreach (var pos in key.Value)
-            {
-                // 각 축에 대해 가장 작은 값과 가장 큰 값 갱신
-                if (pos.x < minX) minX = pos.x;
-                if (pos.y < minY) minY = pos.y;
-                if (pos.z < minZ) minZ = pos.z;
+            // 각 축에 대해 가장 작은 값과 가장 큰 값 갱신
+            if (pos[0] < minX) minX = pos[0];
+            if (pos[1] < minY) minY = pos[1];
+            if (pos[2] < minZ) minZ = pos[2];
 
-                if (pos.x > maxX) maxX = pos.x;
-                if (pos.y > maxY) maxY = pos.y;
-                if (pos.z > maxZ) maxZ = pos.z;
-            }
+            if (pos[0] > maxX) maxX = pos[0];
+            if (pos[1] > maxY) maxY = pos[1];
+            if (pos[2] > maxZ) maxZ = pos[2];
         }
 
         // 중간 지점 계산
